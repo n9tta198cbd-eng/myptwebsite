@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" fill="none">
+<rect width="1600" height="1000" fill="#0B0C08"/>
+<rect x="84" y="84" width="1432" height="832" stroke="#323520"/>
+<rect x="940" y="170" width="240" height="430" fill="#DDD7C9"/>
+<rect x="710" y="350" width="240" height="240" fill="#A73726"/>
+<circle cx="1060" cy="390" r="120" fill="#090A07"/>
+<line x1="180" y1="420" x2="1380" y2="420" stroke="#DDD7C9" stroke-opacity="0.22"/>
+<line x1="1040" y1="110" x2="1040" y2="860" stroke="#DDD7C9" stroke-opacity="0.22"/>
+<line x1="260" y1="250" x2="1320" y2="760" stroke="#DDD7C9" stroke-opacity="0.12" stroke-dasharray="8 10"/>
+<text x="120" y="170" fill="#A8B96A" font-family="monospace" font-size="28">ARCHIVE PLACEHOLDER</text>
+<text x="120" y="230" fill="#D8D2BB" font-family="monospace" font-size="54">PRINT 1</text>
+<text x="120" y="820" fill="#6A684F" font-family="monospace" font-size="24">ЗАМЕНИТЬ НА ФИНАЛЬНЫЙ МАТЕРИАЛ</text>
+</svg>

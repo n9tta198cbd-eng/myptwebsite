@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Редактор архива — N9TTA</title>
+  <meta name="description" content="Локальная редакторская панель для управления контентом портфолио." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@400;500;600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body class="admin-body">
+  <a class="skip-link" href="#adminRoot">Перейти к редактору</a>
+  <div class="tx-noise" aria-hidden="true"></div>
+  <div class="tx-scan" aria-hidden="true"></div>
+  <div class="tx-vignette" aria-hidden="true"></div>
+
+  <header class="admin-topbar">
+    <div>
+      <div class="eyebrow">Локальная панель редактирования</div>
+      <h1 class="admin-title">Редактор контента</h1>
+    </div>
+    <div class="admin-actions">
+      <a class="admin-link" href="index.html" target="_blank" rel="noreferrer">Открыть сайт</a>
+      <button class="admin-btn" id="resetLocal">Сбросить локальные правки</button>
+      <button class="admin-btn" id="exportJson">Экспорт JSON</button>
+      <label class="admin-btn admin-upload">
+        Импорт JSON
+        <input id="importJson" type="file" accept="application/json" hidden>
+      </label>
+    </div>
+  </header>
+
+  <main class="admin-shell" id="adminRoot">
+    <aside class="admin-sidebar" aria-label="Разделы редактора">
+      <button class="admin-tab active" data-tab="overview">Обзор</button>
+      <button class="admin-tab" data-tab="hero">Главный экран</button>
+      <button class="admin-tab" data-tab="cases">Кейсы</button>
+      <button class="admin-tab" data-tab="sections">Разделы</button>
+      <button class="admin-tab" data-tab="socio">Социовизуальное</button>
+      <button class="admin-tab" data-tab="drafts">Черновики</button>
+      <button class="admin-tab" data-tab="creative">Креативные</button>
+      <button class="admin-tab" data-tab="about">Обо мне</button>
+      <button class="admin-tab" data-tab="contacts">Контакты</button>
+      <button class="admin-tab" data-tab="ui">Система</button>
+    </aside>
+
+    <section class="admin-main">
+      <div class="admin-panel active" id="panel-overview"></div>
+      <div class="admin-panel" id="panel-hero"></div>
+      <div class="admin-panel" id="panel-cases"></div>
+      <div class="admin-panel" id="panel-sections"></div>
+      <div class="admin-panel" id="panel-socio"></div>
+      <div class="admin-panel" id="panel-drafts"></div>
+      <div class="admin-panel" id="panel-creative"></div>
+      <div class="admin-panel" id="panel-about"></div>
+      <div class="admin-panel" id="panel-contacts"></div>
+      <div class="admin-panel" id="panel-ui"></div>
+    </section>
+  </main>
+
+  <script src="assets/admin.js" defer></script>
+</body>
+</html>

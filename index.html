@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N9TTA — архив визуальных систем</title>
+  <meta name="description" content="Арт-директор, дизайнер и социовизуальный инженер. Архив кейсов, визуальных систем и креативных работ." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@400;500;600;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <div class="tx-noise" aria-hidden="true"></div>
+  <div class="tx-scan" aria-hidden="true"></div>
+  <div class="tx-vignette" aria-hidden="true"></div>
+
+  <div class="system-bar" id="systemBar"></div>
+
+  <div class="shell">
+    <aside class="nav-col" id="navCol" aria-label="Навигация по разделам"></aside>
+    <main class="main-col" id="main" tabindex="-1"></main>
+  </div>
+
+  <button class="nav-toggle" id="navToggle" aria-label="Открыть навигацию" aria-expanded="false">≡</button>
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
+  <aside class="drawer" id="caseDrawer" aria-label="Просмотр кейса" aria-hidden="true"></aside>
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" id="lightboxClose" aria-label="Закрыть изображение">×</button>
+    <img id="lightboxImage" alt="Увеличенное изображение" />
+  </div>
+
+  <script src="assets/main.js" defer></script>
+</body>
+</html>

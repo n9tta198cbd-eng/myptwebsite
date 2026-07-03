@@ -1,0 +1,518 @@
+{
+  "siteSettings": {
+    "siteName": "N9TTA",
+    "systemId": "N9TTA / архив визуальных систем",
+    "location": "Москва / удалённо / worldwide",
+    "status": "система в сети",
+    "accessLevel": "уровень допуска: 3",
+    "footerNote": "Построено для размышления, а не для листания.",
+    "copyrightYear": "2026",
+    "sectionsEnabled": {
+      "hero": true,
+      "featuredCases": true,
+      "branding": true,
+      "artDirection": true,
+      "socioVisual": true,
+      "drafts": true,
+      "creativeWorks": true,
+      "about": true
+    }
+  },
+  "hero": {
+    "eyebrow": "N9TTA / архив визуальных систем и влияния",
+    "titleLines": [
+      "АРТ-ДИРЕКТОР",
+      "ДИЗАЙНЕР",
+      "СОЦИОВИЗУАЛЬНЫЙ ИНЖЕНЕР"
+    ],
+    "subtitle": "Проектирую визуальные системы, управляю вниманием, собираю среды влияния.",
+    "rolesLabel": "РОЛИ",
+    "roles": [
+      "Арт-директор",
+      "Дизайнер",
+      "Социовизуальный инженер"
+    ],
+    "disciplinesLabel": "ДИСЦИПЛИНЫ",
+    "disciplines": [
+      "Арт-дирекшн",
+      "Брендинг",
+      "Визуальные системы",
+      "Концепции",
+      "AI + автоматизация",
+      "2D / 3D / web"
+    ]
+  },
+  "categories": [
+    {
+      "id": "branding",
+      "title": "Брендинг и дизайн-системы"
+    },
+    {
+      "id": "artdirection",
+      "title": "Арт-дирекшн"
+    },
+    {
+      "id": "socio",
+      "title": "Социовизуальная инженерия"
+    }
+  ],
+  "cases": [
+    {
+      "id": "case-cyberclub",
+      "slug": "konsol-kiberklub",
+      "visible": true,
+      "featured": true,
+      "status": "published",
+      "order": 1,
+      "category": "branding",
+      "title": "Консоль Киберклуб",
+      "subtitle": "Полный визуальный спектр для киберклуба",
+      "year": "2026",
+      "client": "Консоль",
+      "role": "Арт-директор, дизайнер айдентики",
+      "services": [
+        "Визуальная система",
+        "Логотип / знак",
+        "Оформление среды",
+        "Навигация",
+        "Digital и офлайн-носители"
+      ],
+      "summary": "Айдентика, среда, графическая система, носители и визуальный язык пространства для киберклуба.",
+      "challenge": "Собрать единый визуальный язык для пространства, который работает и в цифровой навигации, и в офлайн-среде клуба, не скатываясь в шаблонный киберспортивный стиль.",
+      "approach": "Система строится на строгой сетке, резких контрастах и графической дисциплине пространства. Визуальный язык должен считываться с расстояния, переживать масштабирование и быть пригодным для экранов, стен, меню и навигации.",
+      "outcome": "Получается узнаваемая среда с собственным тоном: не игровой аттракцион, а собранная технологическая сцена с ясным визуальным кодом.",
+      "heroImage": "images/placeholders/cyberclub-hero.svg",
+      "sections": [
+        {
+          "type": "text",
+          "title": "Контекст",
+          "content": "Клубу требовалась визуальная система, которая объединяет пространство, экраны и печатные материалы в единый язык без визуального шума."
+        },
+        {
+          "type": "imageGrid",
+          "title": "Визуальная система",
+          "images": [
+            "images/placeholders/grid-1.svg",
+            "images/placeholders/grid-2.svg",
+            "images/placeholders/grid-3.svg"
+          ]
+        },
+        {
+          "type": "splitTextImage",
+          "title": "Логотип и знак",
+          "content": "Знак построен как модульный символ, который работает в крупном и микроформате: на фасаде, в интерфейсе, на меню и на предметных носителях.",
+          "image": "images/placeholders/logo-block.svg"
+        },
+        {
+          "type": "gallery",
+          "title": "Применение в среде",
+          "images": [
+            "images/placeholders/env-1.svg",
+            "images/placeholders/env-2.svg",
+            "images/placeholders/env-3.svg",
+            "images/placeholders/env-4.svg"
+          ]
+        },
+        {
+          "type": "quote",
+          "content": "Система должна читаться и с экрана, и со стены зала — это и есть инженерная задача айдентики."
+        },
+        {
+          "type": "metricRow",
+          "title": "Параметры системы",
+          "items": [
+            {
+              "label": "Режим",
+              "value": "Пространство + digital"
+            },
+            {
+              "label": "Язык",
+              "value": "Индустриальный / архивный"
+            },
+            {
+              "label": "Сетка",
+              "value": "Модульная"
+            }
+          ]
+        }
+      ],
+      "gallery": [],
+      "videos": [],
+      "notes": "Заменить placeholder-материалы на финальные рендеры, фото среды и макросъёмки носителей."
+    },
+    {
+      "id": "case-raindays",
+      "slug": "tri-dnya-dozhdya",
+      "visible": true,
+      "featured": true,
+      "status": "published",
+      "order": 2,
+      "category": "artdirection",
+      "title": "Три дня дождя",
+      "subtitle": "Коллекция мерча и визуальный язык музыкального проекта",
+      "year": "2026",
+      "client": "Три дня дождя",
+      "role": "Арт-директор, дизайнер",
+      "services": [
+        "Коллекция мерча",
+        "Принты",
+        "Логотип",
+        "Бирки и упаковка",
+        "Кампания"
+      ],
+      "summary": "Принты, логотип, одежда, production-thinking и носители для музыкального проекта.",
+      "challenge": "Перевести атмосферу музыкального проекта в физическую коллекцию, сохранив цельность между графикой, вещью и подачей.",
+      "approach": "Коллекция строится как единый визуальный организм: ткань, принт, бирка, упаковка и кампейн-кадры работают как одна фраза, а не как набор разрозненных объектов.",
+      "outcome": "Кейс оформлен как модульная система, где можно отдельно вести изделия, принты, детали производства и кампанию.",
+      "heroImage": "images/placeholders/raindays-hero.svg",
+      "sections": [
+        {
+          "type": "text",
+          "title": "Обзор коллекции",
+          "content": "Коллекция построена вокруг состояния затяжного дождя как тягучего и вязкого образа, который можно буквально носить на себе."
+        },
+        {
+          "type": "gallery",
+          "title": "Garments",
+          "images": [
+            "images/placeholders/garment-1.svg",
+            "images/placeholders/garment-2.svg",
+            "images/placeholders/garment-3.svg"
+          ]
+        },
+        {
+          "type": "imageGrid",
+          "title": "Print closeups",
+          "images": [
+            "images/placeholders/print-1.svg",
+            "images/placeholders/print-2.svg"
+          ]
+        },
+        {
+          "type": "text",
+          "title": "Production details",
+          "content": "Бирки, ярлыки, упаковка и конструктивные детали изделий разрабатываются как часть единой системы, а не как второстепенный слой."
+        },
+        {
+          "type": "gallery",
+          "title": "On-body visuals",
+          "images": [
+            "images/placeholders/campaign-1.svg",
+            "images/placeholders/campaign-2.svg"
+          ]
+        }
+      ],
+      "gallery": [],
+      "videos": [],
+      "notes": "Добавить итоговые студийные и кампейн-кадры вместо временных заглушек."
+    },
+    {
+      "id": "case-glebkostin",
+      "slug": "gleb-kostin",
+      "visible": true,
+      "featured": true,
+      "status": "published",
+      "order": 3,
+      "category": "socio",
+      "title": "Глеб Костин",
+      "subtitle": "Мультиформатная визуальная экосистема",
+      "year": "2026",
+      "client": "Глеб Костин",
+      "role": "Арт-директор, дизайнер, AI-пайплайн",
+      "services": [
+        "macOS / iOS icons",
+        "Маскот",
+        "Сайт liveweeks",
+        "AI image pipeline",
+        "Physical collab elements"
+      ],
+      "summary": "Icons macOS / iOS, маскот, сайт liveweeks, AI image pipeline, физические коллаборации.",
+      "challenge": "Собрать разрозненные форматы — иконки, сайт, маскота, AI-инструментарий и физические элементы — в единую узнаваемую систему.",
+      "approach": "Кейс специально сделан модульным: каждая подсекция включается и выключается отдельно, поэтому проект можно показывать как digital-identity, как AI-процесс или как мультиформатную экосистему.",
+      "outcome": "Редактор позволяет быстро скрывать целые подсекции, не ломая структуру кейса и не переписывая шаблон.",
+      "heroImage": "images/placeholders/gleb-hero.svg",
+      "sections": [
+        {
+          "type": "text",
+          "title": "Project overview",
+          "content": "Проект развивался поэтапно: от icon-системы до сайта и AI-инструмента.",
+          "enabled": true
+        },
+        {
+          "type": "imageGrid",
+          "title": "Icon system",
+          "images": [
+            "images/placeholders/icon-1.svg",
+            "images/placeholders/icon-2.svg"
+          ],
+          "enabled": true
+        },
+        {
+          "type": "splitTextImage",
+          "title": "Mascot",
+          "content": "Маскот работает как узнаваемый персонаж и как носитель эмоциональной памяти бренда.",
+          "image": "images/placeholders/mascot.svg",
+          "enabled": true
+        },
+        {
+          "type": "text",
+          "title": "Website block",
+          "content": "Сайт liveweeks оформлен как центральная digital-точка экосистемы.",
+          "enabled": true
+        },
+        {
+          "type": "text",
+          "title": "AI styling / image generation workflow",
+          "content": "Собственная модель используется для генерации изображений в узнаваемом стиле проекта, включая Telegram-форматы.",
+          "enabled": true
+        },
+        {
+          "type": "gallery",
+          "title": "Physical applications",
+          "images": [
+            "images/placeholders/physical-1.svg",
+            "images/placeholders/physical-2.svg"
+          ],
+          "enabled": true
+        }
+      ],
+      "gallery": [],
+      "videos": [],
+      "notes": "Можно скрыть физический блок, AI-блок или сайт в редакторе без поломки кейса."
+    },
+    {
+      "id": "case-gazgolder",
+      "slug": "gazgolder",
+      "visible": true,
+      "featured": true,
+      "status": "draft",
+      "order": 4,
+      "category": "artdirection",
+      "title": "Gazgolder",
+      "subtitle": "Визуальные материалы для культурной сцены",
+      "year": "2026",
+      "client": "Gazgolder",
+      "role": "Дизайнер, участник визуальной подачи",
+      "services": [
+        "Визуальные материалы",
+        "Медийная графика",
+        "Merch-элементы"
+      ],
+      "summary": "Крупный культурный и музыкальный кейс: нейтральный редактируемый шаблон без выдуманных достижений и неуточнённых метрик.",
+      "challenge": "Черновик. Нужно быстро дописать фактические детали после подтверждения объёма работ и роли.",
+      "approach": "Секция построена как честный partially editable draft: можно менять текст, носители, галерею, блоки и статус публикации.",
+      "outcome": "Готовый каркас кейса без сфабрикованных фактов — только безопасный placeholder для быстрой доработки.",
+      "heroImage": "images/placeholders/gazgolder-hero.svg",
+      "draftLabel": "частично готовый черновик",
+      "sections": [
+        {
+          "type": "text",
+          "title": "О проекте",
+          "content": "Раздел intentionally оставлен нейтральным и не утверждает несказанные достижения. После уточнения кейс можно быстро наполнить через редактор."
+        },
+        {
+          "type": "checklist",
+          "title": "Что можно дописать позже",
+          "items": [
+            "Фактическую роль",
+            "Набор носителей",
+            "Изображения",
+            "Видео",
+            "Год и статус",
+            "Итоговую формулировку результата"
+          ]
+        }
+      ],
+      "gallery": [],
+      "videos": [],
+      "notes": "Перед публикацией заменить placeholder-описания на подтверждённые факты."
+    }
+  ],
+  "brandingProjects": [
+    {
+      "title": "Логотип Егор Жданович",
+      "tags": [
+        "Логотип",
+        "Айдентика"
+      ],
+      "year": "2026",
+      "linkedCase": null,
+      "image": "images/placeholders/brand-1.svg"
+    },
+    {
+      "title": "Консоль Киберклуб",
+      "tags": [
+        "Брендинг",
+        "Дизайн-система"
+      ],
+      "year": "2026",
+      "linkedCase": "case-cyberclub",
+      "image": "images/placeholders/brand-2.svg"
+    },
+    {
+      "title": "Три дня дождя",
+      "tags": [
+        "Мерч",
+        "Визуальная система"
+      ],
+      "year": "2026",
+      "linkedCase": "case-raindays",
+      "image": "images/placeholders/brand-3.svg"
+    },
+    {
+      "title": "Electroad",
+      "tags": [
+        "Брендинг"
+      ],
+      "year": "2025",
+      "linkedCase": null,
+      "image": "images/placeholders/brand-4.svg"
+    },
+    {
+      "title": "Gleb Kostin",
+      "tags": [
+        "Digital",
+        "Icon-система"
+      ],
+      "year": "2026",
+      "linkedCase": "case-glebkostin",
+      "image": "images/placeholders/brand-5.svg"
+    },
+    {
+      "title": "Telegram Noir",
+      "tags": [
+        "Визуальный язык"
+      ],
+      "year": "2025",
+      "linkedCase": null,
+      "image": "images/placeholders/brand-6.svg"
+    }
+  ],
+  "artDirectionProjects": [
+    {
+      "title": "Electroad",
+      "role": "Арт-дирекшн / визуальное участие",
+      "year": "2025",
+      "image": "images/placeholders/art-1.svg"
+    },
+    {
+      "title": "Консоль Киберклуб",
+      "role": "Арт-директор",
+      "year": "2026",
+      "linkedCase": "case-cyberclub",
+      "image": "images/placeholders/art-2.svg"
+    },
+    {
+      "title": "Три дня дождя",
+      "role": "Арт-директор",
+      "year": "2026",
+      "linkedCase": "case-raindays",
+      "image": "images/placeholders/art-3.svg"
+    },
+    {
+      "title": "Gleb Kostin",
+      "role": "Арт-директор",
+      "year": "2026",
+      "linkedCase": "case-glebkostin",
+      "image": "images/placeholders/art-4.svg"
+    },
+    {
+      "title": "Elysium concept",
+      "role": "Арт-дирекшн (черновик)",
+      "year": "2025",
+      "image": "images/placeholders/art-5.svg"
+    }
+  ],
+  "socioVisualProjects": [
+    {
+      "title": "Визуальные системы влияния",
+      "image": "images/placeholders/social-manifest.svg",
+      "text": "**Визуальная плотность интерфейса** управляет скоростью принятия решений.\n\nПовторяющиеся графические паттерны повышают узнаваемость быстрее текста. Порядок предъявления визуальных элементов формирует иерархию доверия."
+    }
+  ],
+  "drafts": [
+    { "title": "Fadetaileur", "reason": "Проект приостановлен на этапе концепции", "year": "2025", "image": "images/placeholders/draft-1.svg" },
+    { "title": "Платья супрематизм", "reason": "Не найден производственный партнёр", "year": "2025", "image": "images/placeholders/draft-2.svg" },
+    { "title": "Мерч для Мелстроя", "reason": "Проект не вышел в производство", "year": "2024", "image": "images/placeholders/draft-3.svg" },
+    { "title": "Сайт для Elysium", "reason": "Заморожен на этапе прототипа", "year": "2025", "image": "images/placeholders/draft-4.svg" }
+  ],
+  "creativeWorks": [
+    { "title": "Пара постеров", "series": "Постеры", "year": "2026", "image": "images/placeholders/creative-1.svg", "youtubeUrl": "" },
+    { "title": "Супрематизм / о бессмысле труда", "series": "Концептуальная серия", "year": "2025", "image": "images/placeholders/creative-2.svg", "youtubeUrl": "" },
+    { "title": "Bulba", "series": "Графика", "year": "2025", "image": "images/placeholders/creative-3.svg", "youtubeUrl": "" },
+    { "title": "PhoneCord", "series": "Объект / графика", "year": "2025", "image": "images/placeholders/creative-4.svg", "youtubeUrl": "" },
+    { "title": "NADOENO", "series": "Серия", "year": "2024", "image": "images/placeholders/creative-5.svg", "youtubeUrl": "" },
+    { "title": "Экспериментальная графика", "series": "Тесты", "year": "2024–2026", "image": "images/placeholders/creative-6.svg", "youtubeUrl": "" },
+    { "title": "Архив визуальных тестов", "series": "Архив", "year": "2023–2026", "image": "images/placeholders/creative-7.svg", "youtubeUrl": "" }
+  ],
+  "about": {
+    "heading": "Обо мне",
+    "positioning": "Арт-директор с 5-летним опытом в креативной индустрии. Работал со стритвир-сценой Беларуси, крупными стримерами, музыкальными проектами и брендами. В работе опираюсь на исследование контекста, визуальную стратегию, культурные коды и глубокий ресерч. Меня интересует дизайн как инструмент влияния на мнение, эмоции, поведение и восприятие.",
+    "photo": "images/placeholders/about-portrait.svg",
+    "competenciesLabel": "Компетенции",
+    "competencies": [
+      "Арт-дирекшн",
+      "Брендинг",
+      "Визуальные системы",
+      "Разработка концепций",
+      "Визуальная стратегия",
+      "Глубокий ресерч",
+      "Визуальная коммуникация",
+      "AI + автоматизация",
+      "2D / 3D / web"
+    ],
+    "skillBlocksLabel": "Направления",
+    "skillBlocks": [
+      {
+        "title": "Дизайн одежды",
+        "note": "Коллекции, принты, производство"
+      },
+      {
+        "title": "2D + 3D",
+        "note": "Графика, рендер, композиция"
+      },
+      {
+        "title": "Нейросети + автоматизация",
+        "note": "AI-пайплайны, генерация, обучение моделей"
+      },
+      {
+        "title": "Веб-дизайн",
+        "note": "Интерфейсы, сайты, digital-продукты"
+      }
+    ],
+    "experienceLabel": "Опыт",
+    "experience": [
+      {
+        "period": "2021 — н.в.",
+        "role": "Независимый арт-директор",
+        "description": "Работа с музыкальными проектами, стритвир-брендами и цифровыми продуктами."
+      },
+      {
+        "period": "2019 — 2021",
+        "role": "Дизайнер / графика",
+        "description": "Формирование визуальной практики и системного подхода."
+      }
+    ]
+  },
+  "contacts": {
+    "heading": "Контакты",
+    "email": "hello@n9tta.com",
+    "telegram": "@n9tta",
+    "location": "Москва / удалённо",
+    "servicesLabel": "Услуги",
+    "services": [
+      "Арт-дирекшн",
+      "Брендинг и дизайн-системы",
+      "Digital-продукты",
+      "Кампании и коммуникации",
+      "Исследования и стратегия",
+      "Кураторство визуальных проектов"
+    ],
+    "ctaLabel": "Написать"
+  },
+  "uiSettings": {
+    "scanlines": true,
+    "noise": true,
+    "reducedMotionRespected": true
+  }
+}
