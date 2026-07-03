@@ -339,7 +339,7 @@
           <div class="contact-box"><h5>Видимых кейсов</h5><p>${visible}</p></div>
           <div class="contact-box"><h5>Избранных кейсов</h5><p>${featured}</p></div>
         </div>
-        <p class="import-note">Черновиков: ${drafts}. Локальные изменения сохраняются в браузере и сразу применяются на сайте. Для переноса на хостинг экспортируйте JSON и замените файл <code>content/content.json</code>.</p>
+        <p class="import-note">Черновиков: ${drafts}. Локальные изменения сохраняются в браузере и сразу применяются на сайте. Для переноса на хостинг экспортируйте JSON и замените файл <code>content/content.json</code> на сервере.</p>
       </div>
       <div class="admin-card">
         <h3>Как редактировать</h3>

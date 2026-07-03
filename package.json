@@ -1,0 +1,6 @@
+{
+  "name": "portfolio-terminal",
+  "version": "1.0.0",
+  "description": "N9TTA portfolio terminal — static single-page site with local admin panel",
+  "private": true
+}
