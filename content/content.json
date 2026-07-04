@@ -81,7 +81,7 @@
       "challenge": "Собрать единый визуальный язык для пространства, который работает и в цифровой навигации, и в офлайн-среде клуба, не скатываясь в шаблонный киберспортивный стиль.",
       "approach": "Система строится на строгой сетке, резких контрастах и графической дисциплине пространства. Визуальный язык должен считываться с расстояния, переживать масштабирование и быть пригодным для экранов, стен, меню и навигации.",
       "outcome": "Получается узнаваемая среда с собственным тоном: не игровой аттракцион, а собранная технологическая сцена с ясным визуальным кодом.",
-      "heroImage": "images/placeholders/cyberclub-hero.svg",
+      "heroImage": "images/placeholders/konsole.png",
       "sections": [
         {
           "type": "text",
@@ -164,7 +164,7 @@
       "challenge": "Перевести атмосферу музыкального проекта в физическую коллекцию, сохранив цельность между графикой, вещью и подачей.",
       "approach": "Коллекция строится как единый визуальный организм: ткань, принт, бирка, упаковка и кампейн-кадры работают как одна фраза, а не как набор разрозненных объектов.",
       "outcome": "Кейс оформлен как модульная система, где можно отдельно вести изделия, принты, детали производства и кампанию.",
-      "heroImage": "images/placeholders/raindays-hero.svg",
+      "heroImage": "images/placeholders/TDD.png",
       "sections": [
         {
           "type": "text",
@@ -230,7 +230,7 @@
       "challenge": "Собрать разрозненные форматы — иконки, сайт, маскота, AI-инструментарий и физические элементы — в единую узнаваемую систему.",
       "approach": "Кейс специально сделан модульным: каждая подсекция включается и выключается отдельно, поэтому проект можно показывать как digital-identity, как AI-процесс или как мультиформатную экосистему.",
       "outcome": "Редактор позволяет быстро скрывать целые подсекции, не ломая структуру кейса и не переписывая шаблон.",
-      "heroImage": "images/placeholders/gleb-hero.svg",
+      "heroImage": "images/placeholders/Glebkostin.png",
       "sections": [
         {
           "type": "text",
@@ -302,7 +302,7 @@
       "challenge": "Черновик. Нужно быстро дописать фактические детали после подтверждения объёма работ и роли.",
       "approach": "Секция построена как честный partially editable draft: можно менять текст, носители, галерею, блоки и статус публикации.",
       "outcome": "Готовый каркас кейса без сфабрикованных фактов — только безопасный placeholder для быстрой доработки.",
-      "heroImage": "images/placeholders/gazgolder-hero.svg",
+      "heroImage": "images/placeholders/babyCute.png",
       "draftLabel": "частично готовый черновик",
       "sections": [
         {
@@ -431,19 +431,81 @@
     }
   ],
   "drafts": [
-    { "title": "Fadetaileur", "reason": "Проект приостановлен на этапе концепции", "year": "2025", "image": "images/placeholders/draft-1.svg" },
-    { "title": "Платья супрематизм", "reason": "Не найден производственный партнёр", "year": "2025", "image": "images/placeholders/draft-2.svg" },
-    { "title": "Мерч для Мелстроя", "reason": "Проект не вышел в производство", "year": "2024", "image": "images/placeholders/draft-3.svg" },
-    { "title": "Сайт для Elysium", "reason": "Заморожен на этапе прототипа", "year": "2025", "image": "images/placeholders/draft-4.svg" }
+    {
+      "title": "Fadetaileur",
+      "reason": "Проект приостановлен на этапе концепции",
+      "year": "2025",
+      "image": "images/placeholders/draft-1.svg"
+    },
+    {
+      "title": "Платья супрематизм",
+      "reason": "Не найден производственный партнёр",
+      "year": "2025",
+      "image": "images/placeholders/draft-2.svg"
+    },
+    {
+      "title": "Мерч для Мелстроя",
+      "reason": "Проект не вышел в производство",
+      "year": "2024",
+      "image": "images/placeholders/draft-3.svg"
+    },
+    {
+      "title": "Сайт для Elysium",
+      "reason": "Заморожен на этапе прототипа",
+      "year": "2025",
+      "image": "images/placeholders/draft-4.svg"
+    }
   ],
   "creativeWorks": [
-    { "title": "Пара постеров", "series": "Постеры", "year": "2026", "image": "images/placeholders/creative-1.svg", "youtubeUrl": "" },
-    { "title": "Супрематизм / о бессмысле труда", "series": "Концептуальная серия", "year": "2025", "image": "images/placeholders/creative-2.svg", "youtubeUrl": "" },
-    { "title": "Bulba", "series": "Графика", "year": "2025", "image": "images/placeholders/creative-3.svg", "youtubeUrl": "" },
-    { "title": "PhoneCord", "series": "Объект / графика", "year": "2025", "image": "images/placeholders/creative-4.svg", "youtubeUrl": "" },
-    { "title": "NADOENO", "series": "Серия", "year": "2024", "image": "images/placeholders/creative-5.svg", "youtubeUrl": "" },
-    { "title": "Экспериментальная графика", "series": "Тесты", "year": "2024–2026", "image": "images/placeholders/creative-6.svg", "youtubeUrl": "" },
-    { "title": "Архив визуальных тестов", "series": "Архив", "year": "2023–2026", "image": "images/placeholders/creative-7.svg", "youtubeUrl": "" }
+    {
+      "title": "Пара постеров",
+      "series": "Постеры",
+      "year": "2026",
+      "image": "images/placeholders/creative-1.svg",
+      "youtubeUrl": ""
+    },
+    {
+      "title": "Супрематизм / о бессмысле труда",
+      "series": "Концептуальная серия",
+      "year": "2025",
+      "image": "images/placeholders/creative-2.svg",
+      "youtubeUrl": ""
+    },
+    {
+      "title": "Bulba",
+      "series": "Графика",
+      "year": "2025",
+      "image": "images/placeholders/creative-3.svg",
+      "youtubeUrl": ""
+    },
+    {
+      "title": "PhoneCord",
+      "series": "Объект / графика",
+      "year": "2025",
+      "image": "images/placeholders/creative-4.svg",
+      "youtubeUrl": ""
+    },
+    {
+      "title": "NADOENO",
+      "series": "Серия",
+      "year": "2024",
+      "image": "images/placeholders/creative-5.svg",
+      "youtubeUrl": ""
+    },
+    {
+      "title": "Экспериментальная графика",
+      "series": "Тесты",
+      "year": "2024–2026",
+      "image": "images/placeholders/creative-6.svg",
+      "youtubeUrl": ""
+    },
+    {
+      "title": "Архив визуальных тестов",
+      "series": "Архив",
+      "year": "2023–2026",
+      "image": "images/placeholders/creative-7.svg",
+      "youtubeUrl": ""
+    }
   ],
   "about": {
     "heading": "Обо мне",
