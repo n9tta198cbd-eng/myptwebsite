@@ -3,7 +3,20 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { content, password } = req.body || {};
+  let body = '';
+  await new Promise((resolve) => {
+    req.on('data', (chunk) => { body += chunk; });
+    req.on('end', resolve);
+  });
+
+  let parsed;
+  try {
+    parsed = JSON.parse(body);
+  } catch (e) {
+    return res.status(400).json({ error: 'Invalid JSON body' });
+  }
+
+  const { content, password } = parsed || {};
 
   if (!password || password !== process.env.ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Invalid password' });
