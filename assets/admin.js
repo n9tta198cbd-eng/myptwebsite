@@ -3,6 +3,7 @@
 
   const CONTENT_URL = 'content/content.json';
   const LS_KEY = 'n9tta_content_override';
+  const PUBLISH_URL = '/api/publish';
   const $ = (s, p = document) => p.querySelector(s);
   const $$ = (s, p = document) => [...p.querySelectorAll(s)];
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -864,6 +865,37 @@
     reader.readAsText(file, 'utf-8');
   }
 
+  async function publishToSite() {
+    const password = prompt('Введите пароль администратора для публикации:');
+    if (!password) return;
+
+    const btn = document.getElementById('publishBtn');
+    const orig = btn.textContent;
+    btn.textContent = 'Публикация...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(PUBLISH_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: data, password }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        alert('Готово! Сайт обновится через ~1-2 минуты после деплоя Vercel.');
+      } else {
+        alert('Ошибка: ' + (result.error || 'Неизвестная ошибка'));
+      }
+    } catch (err) {
+      alert('Ошибка соединения: ' + err.message);
+    } finally {
+      btn.textContent = orig;
+      btn.disabled = false;
+    }
+  }
+
   function renderAll() {
     overviewPanel();
     heroPanel();
@@ -909,6 +941,7 @@
     data = await loadData();
     bindTabs();
     renderAll();
+    $('#publishBtn').onclick = publishToSite;
     $('#exportJson').onclick = exportJson;
     $('#importJson').onchange = (e) => e.target.files[0] && importJson(e.target.files[0]);
     $('#resetLocal').onclick = () => {
