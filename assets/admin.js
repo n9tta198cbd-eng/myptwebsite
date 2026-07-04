@@ -328,10 +328,11 @@
   }
 
   function overviewPanel() {
-    const total = data.cases.length;
-    const visible = data.cases.filter((c) => c.visible).length;
-    const featured = data.cases.filter((c) => c.featured).length;
-    const drafts = data.cases.filter((c) => c.status === 'draft').length;
+    const cases = data.cases || [];
+    const total = cases.length;
+    const visible = cases.filter((c) => c.visible).length;
+    const featured = cases.filter((c) => c.featured).length;
+    const drafts = cases.filter((c) => c.status === 'draft').length;
     $('#panel-overview').innerHTML = `
       <div class="admin-card">
         <h3>Обзор архива</h3>
@@ -909,12 +910,26 @@
     uiPanel();
   }
 
+  function deepMerge(target, source) {
+    for (const key of Object.keys(source)) {
+      if (!(key in target)) {
+        target[key] = JSON.parse(JSON.stringify(source[key]));
+      } else if (
+        source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) &&
+        target[key] && typeof target[key] === 'object' && !Array.isArray(target[key])
+      ) {
+        deepMerge(target[key], source[key]);
+      }
+    }
+    return target;
+  }
+
   async function loadData() {
     const local = localStorage.getItem(LS_KEY);
     if (local) {
       try { 
         const parsed = JSON.parse(local);
-        return parsed;
+        if (parsed && parsed.cases) return parsed;
       } catch (e) { localStorage.removeItem(LS_KEY); }
     }
     return new Promise((resolve) => {
@@ -925,8 +940,7 @@
         if (xhr.status === 200 || xhr.status === 0) { 
           try { 
             const parsed = JSON.parse(xhr.responseText);
-            resolve(parsed); 
-            return; 
+            if (parsed && parsed.cases) { resolve(parsed); return; }
           } catch (e) {} 
         } 
         const fallback = JSON.parse(JSON.stringify(EMBEDDED_CONTENT));
@@ -939,6 +953,7 @@
 
   async function init() {
     data = await loadData();
+    data = deepMerge(data, JSON.parse(JSON.stringify(EMBEDDED_CONTENT)));
     bindTabs();
     renderAll();
     $('#publishBtn').onclick = publishToSite;
