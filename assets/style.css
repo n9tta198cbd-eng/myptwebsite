@@ -336,6 +336,30 @@ body.preview-on .admin-preview{display:flex;flex-direction:column;position:stick
 .panel-enter > .admin-card:nth-child(4){animation-delay:.15s}
 .panel-enter > .admin-card:nth-child(n+5){animation-delay:.2s}
 
+/* =========================================================
+INTRO / ЗНАКОМСТВО + МАНИФЕСТ СИГ
+========================================================= */
+.intro-grid{display:grid;grid-template-columns:300px 1fr;gap:40px;align-items:start}
+.intro-photo{max-width:300px}
+.intro-facts{margin-top:1px}
+.intro-facts div{padding:12px 14px}
+.intro-lead{max-width:62ch;color:var(--fg-dim);font-size:16px;line-height:1.75;margin-bottom:26px}
+.manifesto{position:relative;border:1px solid var(--line);background:var(--bg-panel);padding:26px clamp(18px,3vw,34px);overflow:hidden}
+.manifesto::before{content:"SIG / MANIFESTO / v1";position:absolute;top:10px;right:12px;font:9px var(--font-mono);color:var(--fg-faint);letter-spacing:.12em;text-transform:uppercase}
+.manifesto__title{font-size:clamp(26px,4vw,44px);line-height:1.05;margin-bottom:18px;font-weight:700}
+.manifesto__body{max-width:74ch;color:var(--fg-dim);line-height:1.75;font-size:14.5px;transition:max-height var(--dur-med) var(--ease)}
+.manifesto__body h4{color:var(--accent);font-size:14px;letter-spacing:.05em;margin:22px 0 8px}
+.manifesto__body strong{color:var(--fg)}
+.manifesto[data-collapsed="true"] .manifesto__body{max-height:300px;overflow:hidden}
+.manifesto__fade{position:absolute;left:0;right:0;bottom:0;height:110px;background:linear-gradient(to bottom,transparent,var(--bg-panel) 85%);pointer-events:none;opacity:1;transition:opacity var(--dur-med) var(--ease)}
+.manifesto[data-collapsed="false"] .manifesto__fade{opacity:0}
+.manifesto__foot{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:16px}
+.manifesto__sign{border:1px dashed var(--accent-dim);padding:8px 14px}
+@media (max-width:1000px){
+  .intro-grid{grid-template-columns:1fr}
+  .intro-photo{max-width:240px}
+}
+
 /* Адаптив админки */
 @media (max-width:1200px){
   body.preview-on .admin-shell{grid-template-columns:200px minmax(0,1fr) minmax(300px,42%)}

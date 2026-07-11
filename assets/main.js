@@ -379,6 +379,7 @@
   function navMarkup(data) {
     const sections = [
       ['hero','Главный экран'],
+      ['intro','Знакомство / манифест'],
       ['featured-cases','Избранные кейсы'],
       ['branding','Брендинг и дизайн-системы'],
       ['artdirection','Арт-дирекшн'],
@@ -388,7 +389,7 @@
       ['about','Обо мне / контакты']
     ];
     const enabled = data.siteSettings.sectionsEnabled || {};
-    const list = sections.filter(([id]) => id === 'featured-cases' ? enabled.featuredCases !== false : id === 'artdirection' ? enabled.artDirection !== false : id === 'creative' ? enabled.creativeWorks !== false : id === 'socio' ? enabled.socioVisual !== false : id === 'about' ? enabled.about !== false : enabled[id] !== false)
+    const list = sections.filter(([id]) => id === 'intro' ? (data.intro && enabled.intro !== false) : id === 'featured-cases' ? enabled.featuredCases !== false : id === 'artdirection' ? enabled.artDirection !== false : id === 'creative' ? enabled.creativeWorks !== false : id === 'socio' ? enabled.socioVisual !== false : id === 'about' ? enabled.about !== false : enabled[id] !== false)
       .map((s, i) => `<a href="#${s[0]}"><span class="n">${String(i + 1).padStart(2,'0')}</span>${esc(s[1])}</a>`).join('');
     return `
       <div class="nav-col__brand">${esc(data.siteSettings.siteName)}</div>
@@ -437,6 +438,49 @@
         </div>
       </div>
     </section>`;
+  }
+
+  // Блок знакомства: профайл-досье + манифест СИГ. Стоит между hero и кейсами.
+  function introSection(data) {
+    const it = data.intro;
+    if (!it) return '';
+    const m = it.manifesto || {};
+    const facts = (it.facts || []).map((f) => `<div><b>${esc(f.label || '')}</b><span>${esc(f.value || '')}</span></div>`).join('');
+    return `<section class="section intro" id="intro">${sectionHead('00', it.heading || 'Знакомство')}
+      <div class="intro-grid">
+        <div class="intro-profile">
+          <div class="about-photo intro-photo">${imageTag(it.photo, 'Портрет', '', true)}</div>
+          ${facts ? `<div class="metric-row intro-facts">${facts}</div>` : ''}
+        </div>
+        <div class="intro-main">
+          ${it.eyebrow ? `<div class="eyebrow">${esc(it.eyebrow)}</div>` : ''}
+          ${it.lead ? `<p class="intro-lead">${markdownToHtml(it.lead)}</p>` : ''}
+          ${m.body ? `
+          <article class="manifesto" data-collapsed="true">
+            ${m.title ? `<h3 class="manifesto__title">${esc(m.title)}</h3>` : ''}
+            <div class="manifesto__body">${markdownToHtml(m.body)}</div>
+            <div class="manifesto__fade" aria-hidden="true"></div>
+          </article>
+          <div class="manifesto__foot">
+            <button class="btn manifesto__toggle" id="manifestoToggle" aria-expanded="false">Читать манифест полностью</button>
+            ${m.signature ? `<span class="status-line manifesto__sign">${esc(m.signature)}</span>` : ''}
+          </div>` : ''}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  function bindManifesto() {
+    const btn = byId('manifestoToggle');
+    if (!btn) return;
+    const box = document.querySelector('.manifesto');
+    btn.addEventListener('click', () => {
+      const collapsed = box.getAttribute('data-collapsed') !== 'false';
+      box.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+      btn.setAttribute('aria-expanded', collapsed ? 'true' : 'false');
+      btn.textContent = collapsed ? 'Свернуть манифест' : 'Читать манифест полностью';
+      if (!collapsed) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }
 
   function cardCase(c, i, large = false) {
@@ -589,6 +633,7 @@
     byId('navCol').innerHTML = navMarkup(data);
     byId('main').innerHTML = `
       ${enabled.hero !== false ? heroPanel(data) : ''}
+      ${enabled.intro !== false ? introSection(data) : ''}
       ${enabled.featuredCases !== false ? featuredSection(featured) : ''}
       ${enabled.branding !== false ? `<section class="section" id="branding">${sectionHead('02','Брендинг и дизайн-системы')}<div class="brand-list">${branding || '<div class="empty-state">Нет материалов</div>'}</div></section>` : ''}
       ${enabled.artDirection !== false ? `<section class="section" id="artdirection">${sectionHead('03','Арт-дирекшн')}<div class="brand-list">${artdirection || '<div class="empty-state">Нет материалов</div>'}</div></section>` : ''}
@@ -600,6 +645,7 @@
 
     bindCards();
     bindNav();
+    bindManifesto();
   }
 
   function bindNav() {
