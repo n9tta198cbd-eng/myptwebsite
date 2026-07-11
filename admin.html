@@ -17,14 +17,16 @@
   <div class="tx-vignette" aria-hidden="true"></div>
 
   <header class="admin-topbar">
-    <div>
+    <div class="admin-topbar__head">
       <div class="eyebrow">Локальная панель редактирования</div>
       <h1 class="admin-title">Редактор контента</h1>
+      <span class="save-status" id="saveStatus" data-state="saved" aria-live="polite">Сохранено локально</span>
     </div>
     <div class="admin-actions">
+      <button class="admin-btn" id="togglePreview" aria-pressed="false">Показать превью</button>
       <a class="admin-link" href="index.html" target="_blank" rel="noreferrer">Открыть сайт</a>
-      <button class="admin-btn" id="resetLocal">Сбросить локальные правки</button>
-      <button class="admin-btn" id="publishBtn">Опубликовать на сайт</button>
+      <button class="admin-btn" id="resetLocal">Сбросить правки</button>
+      <button class="admin-btn admin-btn--accent" id="publishBtn">Опубликовать на сайт</button>
       <button class="admin-btn" id="exportJson">Экспорт JSON</button>
       <label class="admin-btn admin-upload">
         Импорт JSON
@@ -59,6 +61,19 @@
       <div class="admin-panel" id="panel-contacts"></div>
       <div class="admin-panel" id="panel-ui"></div>
     </section>
+
+    <aside class="admin-preview" aria-label="Живое превью сайта">
+      <div class="admin-preview__bar">
+        <span class="admin-preview__label">Живое превью</span>
+        <div class="admin-preview__ctrl">
+          <button class="small-btn" id="refreshPreview" type="button">Обновить</button>
+          <button class="small-btn" id="openPreviewTab" type="button">В новой вкладке</button>
+        </div>
+      </div>
+      <div class="admin-preview__frame">
+        <iframe id="livePreview" src="index.html" title="Живое превью сайта" loading="lazy"></iframe>
+      </div>
+    </aside>
   </main>
 
   <script src="assets/admin.js" defer></script>

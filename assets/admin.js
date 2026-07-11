@@ -9,6 +9,43 @@
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   let data = null;
   let activeCaseId = null;
+  let activeTab = 'overview';
+  let caseSearch = '';
+
+  // Карта панелей: id вкладки -> функция рендера конкретной панели.
+  const PANELS = {
+    overview: () => overviewPanel(),
+    hero: () => heroPanel(),
+    cases: () => casesPanel(),
+    sections: () => sectionsPanel(),
+    socio: () => socioPanel(),
+    drafts: () => draftsPanel(),
+    creative: () => creativePanel(),
+    about: () => aboutPanel(),
+    contacts: () => contactsPanel(),
+    ui: () => uiPanel(),
+  };
+
+  // Опции для выпадающих списков.
+  const STATUS_OPTIONS = [
+    { value: 'draft', label: 'Черновик' },
+    { value: 'published', label: 'Опубликован' },
+  ];
+  const SECTION_TYPE_OPTIONS = [
+    { value: 'text', label: 'Текст' },
+    { value: 'quote', label: 'Цитата' },
+    { value: 'image', label: 'Одно изображение' },
+    { value: 'gallery', label: 'Галерея' },
+    { value: 'imageGrid', label: 'Сетка изображений' },
+    { value: 'splitTextImage', label: 'Текст + изображение' },
+    { value: 'metricRow', label: 'Показатели' },
+    { value: 'processTimeline', label: 'Процесс / таймлайн' },
+    { value: 'video', label: 'Видео (embed)' },
+    { value: 'checklist', label: 'Чеклист' },
+    { value: 'beforeAfter', label: 'До / После' },
+  ];
+  const categoryOptions = () => (data.categories || []).map((c) => ({ value: c.id, label: c.title }));
+  const caseLinkOptions = () => [{ value: '', label: '— не привязан —' }].concat((data.cases || []).map((c) => ({ value: c.id, label: c.title })));
   const EMBEDDED_CONTENT = JSON.parse(JSON.stringify({
   "siteSettings": {
     "siteName": "N9TTA",
@@ -287,37 +324,239 @@
   }
   }));
 
-  function saveLocal() {
-    localStorage.setItem(LS_KEY, JSON.stringify(data, null, 2));
-    renderAll();
+  let persistTimer = null;
+  let previewTimer = null;
+
+  // persist — записать в localStorage (без перерисовки DOM). Ключ фикс потери фокуса:
+  // ввод текста больше НЕ вызывает renderAll(), поэтому активное поле не пересоздаётся.
+  function persist() {
+    setStatus('saving');
+    clearTimeout(persistTimer);
+    persistTimer = setTimeout(() => {
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(data, null, 2));
+        setStatus('saved');
+      } catch (e) {
+        setStatus('error');
+      }
+      schedulePreviewReload();
+    }, 220);
   }
 
-  function input(label, value, oninput, type = 'text') {
-    return `<div class="field"><label>${esc(label)}</label><input type="${esc(type)}" value="${esc(value)}" data-bind="${esc(oninput)}"></div>`;
+  // saveLocal — совместимое имя для правок ТЕКСТА: только сохраняем, ничего не перерисовываем.
+  function saveLocal() {
+    persist();
+  }
+
+  // commit — для СТРУКТУРНЫХ действий (добавить/удалить/переместить/сменить тип):
+  // сохранить и перерисовать только активную панель, а не все десять.
+  function commit() {
+    persist();
+    renderActivePanel();
+  }
+
+  function renderActivePanel() {
+    const fn = PANELS[activeTab];
+    if (fn) fn();
+  }
+
+  function setStatus(state) {
+    const el = document.getElementById('saveStatus');
+    if (!el) return;
+    const map = {
+      saving: 'Сохранение…',
+      saved: 'Сохранено локально',
+      published: 'Опубликовано',
+      error: 'Ошибка сохранения',
+    };
+    el.textContent = map[state] || '';
+    el.dataset.state = state;
+  }
+
+  function schedulePreviewReload() {
+    if (!document.body.classList.contains('preview-on')) return; // не трогаем скрытый iframe
+    const frame = document.getElementById('livePreview');
+    if (!frame) return;
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => {
+      try { frame.contentWindow.location.reload(); } catch (e) { frame.src = frame.src; }
+    }, 400);
+  }
+
+  function input(label, value, oninput, type = 'text', attrs = '') {
+    return `<div class="field"><label>${esc(label)}</label><input type="${esc(type)}" value="${esc(value)}" data-bind="${esc(oninput)}" ${attrs}></div>`;
   }
   function textarea(label, value, oninput) {
     return `<div class="field"><label>${esc(label)}</label><textarea data-bind="${esc(oninput)}">${esc(value)}</textarea></div>`;
   }
+  function select(label, value, path, options) {
+    const opts = options.map((o) => `<option value="${esc(o.value)}" ${String(o.value) === String(value ?? '') ? 'selected' : ''}>${esc(o.label)}</option>`).join('');
+    return `<div class="field"><label>${esc(label)}</label><select data-bind="${esc(path)}">${opts}</select></div>`;
+  }
+  // imageField — поле пути + миниатюра-превью + кнопка загрузки файла.
+  function imageField(label, value, path) {
+    const v = value || '';
+    return `<div class="field img-field">
+      <label>${esc(label)}</label>
+      <div class="img-field__row">
+        <div class="img-thumb" data-thumb>${thumbInner(v)}</div>
+        <div class="img-field__ctrl">
+          <input type="text" value="${esc(v)}" data-bind="${esc(path)}" data-image placeholder="images/…">
+          <label class="small-btn img-upload">Загрузить<input type="file" accept="image/*" hidden data-upload="${esc(path)}"></label>
+        </div>
+      </div>
+    </div>`;
+  }
+  function thumbInner(v) {
+    if (v) return `<img src="${esc(v)}" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.classList.add('img-thumb--empty')">`;
+    return '';
+  }
 
   function bindSimpleFields(scope = document) {
     $$('[data-bind]', scope).forEach((el) => {
-      el.addEventListener('input', (e) => {
-        const path = e.target.getAttribute('data-bind');
-        let val = e.target.value;
-        if (e.target.dataset.type === 'array') {
+      const handler = (e) => {
+        const t = e.target;
+        const path = t.getAttribute('data-bind');
+        let val = t.value;
+        if (t.dataset.type === 'array') {
           val = val.split(',').map((s) => s.trim()).filter(Boolean);
         }
         setByPath(data, path, val);
+        if (t.hasAttribute('data-image')) updateThumb(t);
         saveLocal();
-      });
+      };
+      // input — для текста (без потери фокуса); change — гарантирует запись <select>
+      // и срабатывает раньше data-refresh commit (обработчик навешан первым).
+      el.addEventListener('input', handler);
+      el.addEventListener('change', handler);
     });
     $$('[data-checked]', scope).forEach((el) => {
       el.addEventListener('change', (e) => {
         const path = e.target.getAttribute('data-checked');
         setByPath(data, path, e.target.checked);
-        saveLocal();
+        if (e.target.hasAttribute('data-refresh')) commit(); else saveLocal();
       });
     });
+    // data-refresh: перерисовать активную панель ПОСЛЕ blur/выбора (не на каждую клавишу),
+    // чтобы обновились подписи (пилюли кейсов) и тип-зависимые редакторы секций.
+    $$('[data-refresh]', scope).forEach((el) => {
+      if (el.hasAttribute('data-checked')) return; // уже обработан выше
+      el.addEventListener('change', () => commit());
+    });
+    bindUploads(scope);
+  }
+
+  function updateThumb(inputEl) {
+    const wrap = inputEl.closest('.img-field');
+    const thumb = wrap && wrap.querySelector('[data-thumb]');
+    if (!thumb) return;
+    thumb.classList.remove('img-thumb--empty');
+    thumb.innerHTML = thumbInner(inputEl.value);
+  }
+
+  const PW_KEY = 'n9tta_admin_pw';
+  function getAdminPassword(force) {
+    let p = sessionStorage.getItem(PW_KEY);
+    if (p && !force) return p;
+    p = prompt('Введите пароль администратора:');
+    if (p) sessionStorage.setItem(PW_KEY, p);
+    return p;
+  }
+
+  function bindUploads(scope = document) {
+    $$('[data-upload]', scope).forEach((inp) => {
+      inp.addEventListener('change', async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const path = inp.getAttribute('data-upload');
+        const labelBtn = inp.closest('.img-upload');
+        const textNode = labelBtn && labelBtn.firstChild;
+        const orig = textNode ? textNode.textContent : 'Загрузить';
+        if (textNode) textNode.textContent = 'Загрузка…';
+        try {
+          const prepared = await prepareImage(file);
+          const result = await uploadImage(prepared, file.name);
+          setByPath(data, path, result.path);
+          persist();
+          renderActivePanel();
+        } catch (err) {
+          alert('Ошибка загрузки: ' + (err && err.message ? err.message : err));
+        } finally {
+          if (textNode) textNode.textContent = orig;
+          inp.value = '';
+        }
+      });
+    });
+  }
+
+  // Клиентская подготовка: SVG — как есть; растр — уменьшаем до <=2000px и жмём в webp/jpeg,
+  // чтобы уложиться в лимит тела Vercel (~4.5 МБ).
+  function prepareImage(file) {
+    return new Promise((resolve, reject) => {
+      if (file.type === 'image/svg+xml' || /\.svg$/i.test(file.name)) {
+        const r = new FileReader();
+        r.onload = () => resolve({ dataBase64: btoa(unescape(encodeURIComponent(r.result))), contentType: 'image/svg+xml', ext: 'svg' });
+        r.onerror = () => reject(new Error('не удалось прочитать файл'));
+        r.readAsText(file);
+        return;
+      }
+      const r = new FileReader();
+      r.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const max = 2000;
+          let { width, height } = img;
+          if (width > max || height > max) {
+            const s = Math.min(max / width, max / height);
+            width = Math.round(width * s);
+            height = Math.round(height * s);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          let mime = 'image/webp';
+          let dataUrl = canvas.toDataURL(mime, 0.85);
+          if (dataUrl.indexOf('data:image/webp') !== 0) {
+            mime = 'image/jpeg';
+            dataUrl = canvas.toDataURL(mime, 0.85);
+          }
+          resolve({ dataBase64: dataUrl.split(',')[1], contentType: mime, ext: mime === 'image/webp' ? 'webp' : 'jpg' });
+        };
+        img.onerror = () => reject(new Error('не удалось декодировать изображение'));
+        img.src = r.result;
+      };
+      r.onerror = () => reject(new Error('не удалось прочитать файл'));
+      r.readAsDataURL(file);
+    });
+  }
+
+  async function uploadImage(prepared, originalName) {
+    const password = getAdminPassword();
+    if (!password) throw new Error('нужен пароль');
+    const slug = (originalName || 'image')
+      .replace(/\.[^.]+$/, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 40) || 'image';
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: `${Date.now()}-${slug}.${prepared.ext}`,
+        dataBase64: prepared.dataBase64,
+        contentType: prepared.contentType,
+        password,
+      }),
+    });
+    if (res.status === 401) {
+      sessionStorage.removeItem(PW_KEY);
+      throw new Error('неверный пароль');
+    }
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok || !result.path) throw new Error(result.error || 'сервер отклонил загрузку');
+    return result;
   }
 
   function setByPath(obj, path, value) {
@@ -376,8 +615,8 @@
       </div>`;
     renderStringRepeater('#heroLines', data.hero.titleLines, 'hero.titleLines');
     renderStringRepeater('#heroDisciplines', data.hero.disciplines, 'hero.disciplines');
-    $('#addHeroLine').onclick = () => { data.hero.titleLines.push('Новая строка'); saveLocal(); };
-    $('#addDiscipline').onclick = () => { data.hero.disciplines.push('Новая дисциплина'); saveLocal(); };
+    $('#addHeroLine').onclick = () => { data.hero.titleLines.push('Новая строка'); commit(); };
+    $('#addDiscipline').onclick = () => { data.hero.disciplines.push('Новая дисциплина'); commit(); };
     bindSimpleFields($('#panel-hero'));
   }
 
@@ -402,11 +641,11 @@
     $$('[data-remove]', root).forEach((btn) => btn.onclick = () => {
       const list = getByPath(data, btn.dataset.remove);
       list.splice(Number(btn.dataset.index), 1);
-      saveLocal();
+      commit();
     });
     $$('[data-move]', root).forEach((btn) => btn.onclick = () => {
       moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.move === 'up' ? -1 : 1);
-      saveLocal();
+      commit();
     });
   }
 
@@ -424,30 +663,46 @@
     if (!activeCaseId) activeCaseId = data.cases[0]?.id || null;
     const current = data.cases.find((c) => c.id === activeCaseId) || data.cases[0];
     if (current) activeCaseId = current.id;
+    const q = caseSearch.trim().toLowerCase();
+    const filtered = q
+      ? data.cases.filter((c) => `${c.title} ${c.client} ${c.category} ${c.year}`.toLowerCase().includes(q))
+      : data.cases;
     $('#panel-cases').innerHTML = `
       <div class="admin-card">
         <div class="admin-toolbar">
-          <button class="small-btn" id="addCase">Добавить кейс</button>
-          <button class="small-btn" id="duplicateCase">Дублировать кейс</button>
-          <button class="small-btn" id="deleteCase">Удалить кейс</button>
+          <button class="small-btn" id="addCase">+ Добавить кейс</button>
+          <button class="small-btn" id="duplicateCase">Дублировать</button>
+          <button class="small-btn" id="deleteCase">Удалить</button>
         </div>
-        <div class="case-list">${data.cases.map((c, i) => `
+        <div class="field case-search">
+          <input type="search" id="caseSearchInput" placeholder="Поиск по кейсам…" value="${esc(caseSearch)}">
+        </div>
+        <div class="case-list">${filtered.map((c) => `
           <button class="case-item ${c.id === activeCaseId ? 'active' : ''}" data-case-select="${esc(c.id)}">
             <div class="case-head">
               <div>
                 <h4>${esc(c.title)}</h4>
                 <div class="note">${esc(c.client || 'Без клиента')} / ${esc(c.year || '—')}</div>
               </div>
-              <div>
-                ${c.featured ? '<span class="status-pill">featured</span>' : ''}
-                ${c.visible ? '<span class="status-pill">visible</span>' : '<span class="status-pill">hidden</span>'}
+              <div class="case-pills">
+                ${c.status === 'draft' ? '<span class="status-pill pill-draft">draft</span>' : ''}
+                ${c.featured ? '<span class="status-pill pill-featured">featured</span>' : ''}
+                ${c.visible ? '<span class="status-pill">visible</span>' : '<span class="status-pill pill-hidden">hidden</span>'}
               </div>
             </div>
-          </button>`).join('')}</div>
+          </button>`).join('') || '<div class="empty-state">Ничего не найдено</div>'}</div>
       </div>
       ${current ? caseEditor(current) : '<div class="admin-card"><p>Нет кейсов</p></div>'}`;
 
-    $$('[data-case-select]').forEach((btn) => btn.onclick = () => { activeCaseId = btn.dataset.caseSelect; renderAll(); });
+    $$('[data-case-select]').forEach((btn) => btn.onclick = () => { activeCaseId = btn.dataset.caseSelect; renderActivePanel(); });
+    const searchInput = $('#caseSearchInput');
+    if (searchInput) searchInput.oninput = (e) => {
+      caseSearch = e.target.value;
+      const pos = e.target.selectionStart;
+      renderActivePanel();
+      const again = $('#caseSearchInput');
+      if (again) { again.focus(); again.setSelectionRange(pos, pos); }
+    };
     $('#addCase').onclick = addCase;
     $('#duplicateCase').onclick = duplicateCase;
     $('#deleteCase').onclick = deleteCase;
@@ -461,22 +716,22 @@
         <div class="admin-grid">
           ${input('ID', c.id, `cases.${idx(c.id)}.id`)}
           ${input('Slug', c.slug, `cases.${idx(c.id)}.slug`)}
-          ${input('Название', c.title, `cases.${idx(c.id)}.title`)}
+          ${input('Название', c.title, `cases.${idx(c.id)}.title`, 'text', 'data-refresh')}
           ${input('Подзаголовок', c.subtitle, `cases.${idx(c.id)}.subtitle`)}
-          ${input('Год', c.year, `cases.${idx(c.id)}.year`)}
-          ${input('Клиент', c.client, `cases.${idx(c.id)}.client`)}
-          ${input('Категория', c.category, `cases.${idx(c.id)}.category`)}
+          ${input('Год', c.year, `cases.${idx(c.id)}.year`, 'text', 'data-refresh')}
+          ${input('Клиент', c.client, `cases.${idx(c.id)}.client`, 'text', 'data-refresh')}
+          ${select('Категория', c.category, `cases.${idx(c.id)}.category`, categoryOptions())}
           ${input('Роль', c.role, `cases.${idx(c.id)}.role`)}
-          ${input('Статус', c.status, `cases.${idx(c.id)}.status`)}
-          ${input('Путь к обложке', c.heroImage, `cases.${idx(c.id)}.heroImage`)}
+          ${select('Статус', c.status, `cases.${idx(c.id)}.status`, STATUS_OPTIONS)}
         </div>
+        ${imageField('Обложка кейса', c.heroImage, `cases.${idx(c.id)}.heroImage`)}
         ${textarea('Краткое описание', c.summary, `cases.${idx(c.id)}.summary`)}
         ${textarea('Задача', c.challenge, `cases.${idx(c.id)}.challenge`)}
         ${textarea('Подход', c.approach, `cases.${idx(c.id)}.approach`)}
         ${textarea('Результат / рефлексия', c.outcome, `cases.${idx(c.id)}.outcome`)}
         ${textarea('Заметка', c.notes || '', `cases.${idx(c.id)}.notes`)}
-        <div class="switch"><input type="checkbox" ${c.visible ? 'checked' : ''} data-checked="cases.${idx(c.id)}.visible"><span>Показывать кейс</span></div>
-        <div class="switch"><input type="checkbox" ${c.featured ? 'checked' : ''} data-checked="cases.${idx(c.id)}.featured"><span>Показывать в featured</span></div>
+        <div class="switch"><input type="checkbox" ${c.visible ? 'checked' : ''} data-checked="cases.${idx(c.id)}.visible" data-refresh><span>Показывать кейс</span></div>
+        <div class="switch"><input type="checkbox" ${c.featured ? 'checked' : ''} data-checked="cases.${idx(c.id)}.featured" data-refresh><span>Показывать в featured</span></div>
       </div>
       <div class="admin-card">
         <h3>Услуги</h3>
@@ -502,12 +757,12 @@
   function bindCaseEditor(c) {
     if (!c) return;
     renderStringRepeater('#caseServices', c.services || [], `cases.${idx(c.id)}.services`);
-    $('#addCaseService').onclick = () => { c.services = c.services || []; c.services.push('Новая услуга'); saveLocal(); };
+    $('#addCaseService').onclick = () => { c.services = c.services || []; c.services.push('Новая услуга'); commit(); };
     renderCaseSections(c);
-    $('#addTextSection').onclick = () => { c.sections.push({ type: 'text', title: 'Новый текстовый блок', content: 'Текст секции' }); saveLocal(); };
-    $('#addGallerySection').onclick = () => { c.sections.push({ type: 'gallery', title: 'Новая галерея', images: ['images/placeholders/gallery-1.svg'] }); saveLocal(); };
-    $('#addSplitSection').onclick = () => { c.sections.push({ type: 'splitTextImage', title: 'Новый split-блок', content: 'Описание блока', image: 'images/placeholders/section.svg' }); saveLocal(); };
-    $('#addMetricSection').onclick = () => { c.sections.push({ type: 'metricRow', title: 'Показатели', items: [{ label: 'Параметр', value: 'Значение' }] }); saveLocal(); };
+    $('#addTextSection').onclick = () => { c.sections.push({ type: 'text', title: 'Новый текстовый блок', content: 'Текст секции' }); commit(); };
+    $('#addGallerySection').onclick = () => { c.sections.push({ type: 'gallery', title: 'Новая галерея', images: ['images/placeholders/gallery-1.svg'] }); commit(); };
+    $('#addSplitSection').onclick = () => { c.sections.push({ type: 'splitTextImage', title: 'Новый split-блок', content: 'Описание блока', image: 'images/placeholders/section.svg' }); commit(); };
+    $('#addMetricSection').onclick = () => { c.sections.push({ type: 'metricRow', title: 'Показатели', items: [{ label: 'Параметр', value: 'Значение' }] }); commit(); };
     bindSimpleFields($('#panel-cases'));
   }
 
@@ -515,45 +770,78 @@
     const root = $('#caseSections');
     root.innerHTML = c.sections.map((sec, i) => {
       const base = `cases.${idx(c.id)}.sections.${i}`;
+      const typeLabel = (SECTION_TYPE_OPTIONS.find((o) => o.value === sec.type) || {}).label || sec.type;
       const common = `
-        <div class="field"><label>Тип секции</label><input value="${esc(sec.type)}" data-bind="${base}.type"></div>
-        <div class="field"><label>Заголовок</label><input value="${esc(sec.title || '')}" data-bind="${base}.title"></div>
+        <div class="section-item__head">
+          <span class="section-item__badge">${esc(typeLabel)}</span>
+          <div class="admin-toolbar">
+            <button class="small-btn" data-sec-move="up" data-index="${i}">↑</button>
+            <button class="small-btn" data-sec-move="down" data-index="${i}">↓</button>
+            <button class="small-btn danger" data-sec-remove="${i}">Удалить</button>
+          </div>
+        </div>
+        <div class="admin-grid">
+          ${select('Тип секции', sec.type, `${base}.type`, SECTION_TYPE_OPTIONS).replace('data-bind', 'data-refresh data-bind')}
+          ${input('Заголовок', sec.title || '', `${base}.title`)}
+        </div>
         <div class="switch"><input type="checkbox" ${sec.enabled === false ? '' : 'checked'} data-checked="${base}.enabled"><span>Секция включена</span></div>`;
-      let body = '';
-      if (sec.type === 'text' || sec.type === 'quote') body = textarea('Контент', sec.content || '', `${base}.content`);
-      if (sec.type === 'splitTextImage') body = textarea('Контент', sec.content || '', `${base}.content`) + input('Путь к изображению', sec.image || '', `${base}.image`);
-      if (sec.type === 'gallery' || sec.type === 'imageGrid') {
-        body = `<div class="repeater" data-gallery-root="${i}"></div><button class="small-btn" data-add-image="${i}">Добавить изображение</button>`;
-      }
-      if (sec.type === 'metricRow') {
-        body = `<div class="repeater" data-metric-root="${i}"></div><button class="small-btn" data-add-metric="${i}">Добавить показатель</button>`;
-      }
-      return `<div class="section-item"><div class="admin-toolbar"><button class="small-btn" data-sec-move="up" data-index="${i}">↑</button><button class="small-btn" data-sec-move="down" data-index="${i}">↓</button><button class="small-btn" data-sec-remove="${i}">Удалить секцию</button></div>${common}${body}</div>`;
-    }).join('');
+      return `<div class="section-item">${common}${sectionBody(sec, base, i)}</div>`;
+    }).join('') || '<div class="empty-state">Секций пока нет — добавьте выше</div>';
 
-    $$('[data-sec-remove]').forEach((btn) => btn.onclick = () => { c.sections.splice(Number(btn.dataset.secRemove), 1); saveLocal(); });
-    $$('[data-sec-move]').forEach((btn) => btn.onclick = () => { moveInArray(c.sections, Number(btn.dataset.index), btn.dataset.secMove === 'up' ? -1 : 1); saveLocal(); });
-    $$('[data-add-image]').forEach((btn) => btn.onclick = () => { const sec = c.sections[Number(btn.dataset.addImage)]; sec.images = sec.images || []; sec.images.push('images/placeholders/gallery-new.svg'); saveLocal(); });
-    $$('[data-add-metric]').forEach((btn) => btn.onclick = () => { const sec = c.sections[Number(btn.dataset.addMetric)]; sec.items = sec.items || []; sec.items.push({ label: 'Новый параметр', value: 'Значение' }); saveLocal(); });
+    $$('[data-sec-remove]').forEach((btn) => btn.onclick = () => { c.sections.splice(Number(btn.dataset.secRemove), 1); commit(); });
+    $$('[data-sec-move]').forEach((btn) => btn.onclick = () => { moveInArray(c.sections, Number(btn.dataset.index), btn.dataset.secMove === 'up' ? -1 : 1); commit(); });
+    $$('[data-add-image]').forEach((btn) => btn.onclick = () => { const sec = c.sections[Number(btn.dataset.addImage)]; sec.images = sec.images || []; sec.images.push(''); commit(); });
+    $$('[data-add-metric]').forEach((btn) => btn.onclick = () => { const sec = c.sections[Number(btn.dataset.addMetric)]; sec.items = sec.items || []; sec.items.push({ label: 'Новый параметр', value: 'Значение' }); commit(); });
+    $$('[data-add-step]').forEach((btn) => btn.onclick = () => { const sec = c.sections[Number(btn.dataset.addStep)]; sec.items = sec.items || []; sec.items.push({ step: 'Этап', text: 'Описание' }); commit(); });
+    $$('[data-add-check]').forEach((btn) => btn.onclick = () => { const sec = c.sections[Number(btn.dataset.addCheck)]; sec.items = sec.items || []; sec.items.push('Новый пункт'); commit(); });
 
     c.sections.forEach((sec, i) => {
       if (sec.type === 'gallery' || sec.type === 'imageGrid') renderGalleryRepeater(c, sec, i);
       if (sec.type === 'metricRow') renderMetricRepeater(c, sec, i);
+      if (sec.type === 'processTimeline') renderTimelineRepeater(c, sec, i);
+      if (sec.type === 'checklist') renderChecklistRepeater(c, sec, i);
     });
     bindSimpleFields(root);
   }
 
+  // Редактор тела секции — свой набор полей под каждый из 11 типов, что умеет рисовать main.js.
+  function sectionBody(sec, base, i) {
+    switch (sec.type) {
+      case 'text':
+      case 'quote':
+        return textarea('Контент (markdown)', sec.content || '', `${base}.content`);
+      case 'image':
+        return imageField('Изображение', sec.image || '', `${base}.image`);
+      case 'splitTextImage':
+        return textarea('Контент (markdown)', sec.content || '', `${base}.content`) + imageField('Изображение', sec.image || '', `${base}.image`);
+      case 'gallery':
+      case 'imageGrid':
+        return `<div class="repeater" data-gallery-root="${i}"></div><button class="small-btn" data-add-image="${i}">+ Изображение</button>`;
+      case 'metricRow':
+        return `<div class="repeater" data-metric-root="${i}"></div><button class="small-btn" data-add-metric="${i}">+ Показатель</button>`;
+      case 'processTimeline':
+        return `<div class="repeater" data-timeline-root="${i}"></div><button class="small-btn" data-add-step="${i}">+ Этап</button>`;
+      case 'checklist':
+        return `<div class="repeater" data-checklist-root="${i}"></div><button class="small-btn" data-add-check="${i}">+ Пункт</button>`;
+      case 'video':
+        return input('Embed URL (YouTube/Vimeo embed)', sec.url || '', `${base}.url`);
+      case 'beforeAfter':
+        return `<div class="admin-grid">${imageField('До', sec.before || '', `${base}.before`)}${imageField('После', sec.after || '', `${base}.after`)}</div>`;
+      default:
+        return '';
+    }
+  }
+
   function renderGalleryRepeater(c, sec, i) {
     const root = $(`[data-gallery-root="${i}"]`);
+    const base = `cases.${idx(c.id)}.sections.${i}.images`;
     root.innerHTML = (sec.images || []).map((img, imgIndex) => `
       <div class="repeater-item">
-        <div class="repeater-row">
-          <input value="${esc(img)}" data-gallery-input="${i}" data-gallery-index="${imgIndex}">
-          <button class="small-btn" data-gallery-remove="${i}" data-gallery-index="${imgIndex}">Удалить</button>
-        </div>
+        ${imageField(`Изображение ${imgIndex + 1}`, img, `${base}.${imgIndex}`)}
+        <button class="small-btn danger" data-gallery-remove="${i}" data-gallery-index="${imgIndex}">Удалить</button>
       </div>`).join('');
-    $$('input[data-gallery-input]', root).forEach((el) => el.oninput = () => { sec.images[Number(el.dataset.galleryIndex)] = el.value; saveLocal(); });
-    $$('[data-gallery-remove]', root).forEach((btn) => btn.onclick = () => { sec.images.splice(Number(btn.dataset.galleryIndex), 1); saveLocal(); });
+    $$('[data-gallery-remove]', root).forEach((btn) => btn.onclick = () => { sec.images.splice(Number(btn.dataset.galleryIndex), 1); commit(); });
+    bindSimpleFields(root);
   }
 
   function renderMetricRepeater(c, sec, i) {
@@ -562,11 +850,37 @@
       <div class="repeater-item">
         <div class="field"><label>Название</label><input value="${esc(it.label)}" data-metric-label="${i}" data-metric-index="${itemIndex}"></div>
         <div class="field"><label>Значение</label><input value="${esc(it.value)}" data-metric-value="${i}" data-metric-index="${itemIndex}"></div>
-        <button class="small-btn" data-metric-remove="${i}" data-metric-index="${itemIndex}">Удалить</button>
+        <button class="small-btn danger" data-metric-remove="${i}" data-metric-index="${itemIndex}">Удалить</button>
       </div>`).join('');
     $$('[data-metric-label]', root).forEach((el) => el.oninput = () => { sec.items[Number(el.dataset.metricIndex)].label = el.value; saveLocal(); });
     $$('[data-metric-value]', root).forEach((el) => el.oninput = () => { sec.items[Number(el.dataset.metricIndex)].value = el.value; saveLocal(); });
-    $$('[data-metric-remove]', root).forEach((btn) => btn.onclick = () => { sec.items.splice(Number(btn.dataset.metricIndex), 1); saveLocal(); });
+    $$('[data-metric-remove]', root).forEach((btn) => btn.onclick = () => { sec.items.splice(Number(btn.dataset.metricIndex), 1); commit(); });
+  }
+
+  function renderTimelineRepeater(c, sec, i) {
+    const root = $(`[data-timeline-root="${i}"]`);
+    root.innerHTML = (sec.items || []).map((it, itemIndex) => `
+      <div class="repeater-item">
+        <div class="field"><label>Этап</label><input value="${esc(it.step || '')}" data-tl-step="${i}" data-tl-index="${itemIndex}"></div>
+        <div class="field"><label>Описание</label><input value="${esc(it.text || '')}" data-tl-text="${i}" data-tl-index="${itemIndex}"></div>
+        <button class="small-btn danger" data-tl-remove="${i}" data-tl-index="${itemIndex}">Удалить</button>
+      </div>`).join('');
+    $$('[data-tl-step]', root).forEach((el) => el.oninput = () => { sec.items[Number(el.dataset.tlIndex)].step = el.value; saveLocal(); });
+    $$('[data-tl-text]', root).forEach((el) => el.oninput = () => { sec.items[Number(el.dataset.tlIndex)].text = el.value; saveLocal(); });
+    $$('[data-tl-remove]', root).forEach((btn) => btn.onclick = () => { sec.items.splice(Number(btn.dataset.tlIndex), 1); commit(); });
+  }
+
+  function renderChecklistRepeater(c, sec, i) {
+    const root = $(`[data-checklist-root="${i}"]`);
+    root.innerHTML = (sec.items || []).map((it, itemIndex) => `
+      <div class="repeater-item">
+        <div class="repeater-row">
+          <input value="${esc(it)}" data-check-input="${i}" data-check-index="${itemIndex}">
+          <button class="small-btn danger" data-check-remove="${i}" data-check-index="${itemIndex}">Удалить</button>
+        </div>
+      </div>`).join('');
+    $$('[data-check-input]', root).forEach((el) => el.oninput = () => { sec.items[Number(el.dataset.checkIndex)] = el.value; saveLocal(); });
+    $$('[data-check-remove]', root).forEach((btn) => btn.onclick = () => { sec.items.splice(Number(btn.dataset.checkIndex), 1); commit(); });
   }
 
   function sectionsPanel() {
@@ -588,8 +902,8 @@
       </div>`;
     renderArchiveRepeater('#brandingList', data.brandingProjects, 'brandingProjects', ['title', 'tags', 'year', 'linkedCase', 'image']);
     renderArchiveRepeater('#artDirectionList', data.artDirectionProjects, 'artDirectionProjects', ['title', 'role', 'year', 'linkedCase', 'image']);
-    $('#addBrandingItem').onclick = () => { data.brandingProjects.push({ title: 'Новый проект', tags: ['Тег'], year: '2026', linkedCase: null, image: 'images/placeholders/brand-new.svg' }); saveLocal(); };
-    $('#addArtDirectionItem').onclick = () => { data.artDirectionProjects.push({ title: 'Новый проект', role: 'Роль', year: '2026', image: 'images/placeholders/art-new.svg' }); saveLocal(); };
+    $('#addBrandingItem').onclick = () => { data.brandingProjects.push({ title: 'Новый проект', tags: ['Тег'], year: '2026', linkedCase: null, image: '' }); commit(); };
+    $('#addArtDirectionItem').onclick = () => { data.artDirectionProjects.push({ title: 'Новый проект', role: 'Роль', year: '2026', linkedCase: null, image: '' }); commit(); };
     bindSimpleFields($('#panel-sections'));
   }
 
@@ -602,7 +916,7 @@
         <button class="small-btn" id="addSocioItem">Добавить проект</button>
       </div>`;
     renderSocioRepeater('#socioList', data.socioVisualProjects, 'socioVisualProjects');
-    $('#addSocioItem').onclick = () => { data.socioVisualProjects.push({ title: 'Новый проект', image: 'images/placeholders/social-manifest.svg', text: 'Описание проекта.' }); saveLocal(); };
+    $('#addSocioItem').onclick = () => { data.socioVisualProjects.push({ title: 'Новый проект', image: '', text: 'Описание проекта.' }); commit(); };
   }
 
   function draftsPanel() {
@@ -614,7 +928,7 @@
         <button class="small-btn" id="addDraftItem">Добавить черновик</button>
       </div>`;
     renderDraftsRepeater('#draftsList', data.drafts, 'drafts');
-    $('#addDraftItem').onclick = () => { data.drafts.push({ title: 'Новый черновик', reason: 'Причина', year: '2026', image: 'images/placeholders/draft-new.svg' }); saveLocal(); };
+    $('#addDraftItem').onclick = () => { data.drafts.push({ title: 'Новый черновик', reason: 'Причина', year: '2026', image: '' }); commit(); };
   }
 
   function creativePanel() {
@@ -626,7 +940,7 @@
         <button class="small-btn" id="addCreativeItem">Добавить работу</button>
       </div>`;
     renderCreativeRepeater('#creativeList', data.creativeWorks, 'creativeWorks');
-    $('#addCreativeItem').onclick = () => { data.creativeWorks.push({ title: 'Новая работа', series: 'Серия', year: '2026', image: 'images/placeholders/creative-new.svg', youtubeUrl: '' }); saveLocal(); };
+    $('#addCreativeItem').onclick = () => { data.creativeWorks.push({ title: 'Новая работа', series: 'Серия', year: '2026', image: '', youtubeUrl: '' }); commit(); };
   }
 
   function renderSocioRepeater(sel, arr, path) {
@@ -634,13 +948,13 @@
     root.innerHTML = arr.map((item, i) => `
       <div class="repeater-item">
         <div class="field"><label>Название</label><input value="${esc(item.title || '')}" data-bind="${path}.${i}.title"></div>
-        <div class="field"><label>Изображение</label><input value="${esc(item.image || '')}" data-bind="${path}.${i}.image"></div>
+        ${imageField('Изображение', item.image || '', `${path}.${i}.image`)}
         <div class="field"><label>Текст (markdown)</label><textarea data-bind="${path}.${i}.text">${esc(item.text || '')}</textarea></div>
-        <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
+        <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn danger" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
       </div>`).join('');
     bindSimpleFields(root);
-    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); saveLocal(); });
-    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); saveLocal(); });
+    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); commit(); });
+    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); commit(); });
   }
 
   function renderDraftsRepeater(sel, arr, path) {
@@ -650,12 +964,12 @@
         <div class="field"><label>Название</label><input value="${esc(item.title || '')}" data-bind="${path}.${i}.title"></div>
         <div class="field"><label>Причина</label><input value="${esc(item.reason || '')}" data-bind="${path}.${i}.reason"></div>
         <div class="field"><label>Год</label><input value="${esc(item.year || '')}" data-bind="${path}.${i}.year"></div>
-        <div class="field"><label>Изображение</label><input value="${esc(item.image || '')}" data-bind="${path}.${i}.image"></div>
-        <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
+        ${imageField('Изображение', item.image || '', `${path}.${i}.image`)}
+        <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn danger" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
       </div>`).join('');
     bindSimpleFields(root);
-    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); saveLocal(); });
-    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); saveLocal(); });
+    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); commit(); });
+    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); commit(); });
   }
 
   function renderCreativeRepeater(sel, arr, path) {
@@ -665,31 +979,34 @@
         <div class="field"><label>Название</label><input value="${esc(item.title || '')}" data-bind="${path}.${i}.title"></div>
         <div class="field"><label>Серия</label><input value="${esc(item.series || '')}" data-bind="${path}.${i}.series"></div>
         <div class="field"><label>Год</label><input value="${esc(item.year || '')}" data-bind="${path}.${i}.year"></div>
-        <div class="field"><label>Изображение</label><input value="${esc(item.image || '')}" data-bind="${path}.${i}.image"></div>
+        ${imageField('Изображение', item.image || '', `${path}.${i}.image`)}
         <div class="field"><label>YouTube URL</label><input value="${esc(item.youtubeUrl || '')}" data-bind="${path}.${i}.youtubeUrl"></div>
-        <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
+        <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn danger" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
       </div>`).join('');
     bindSimpleFields(root);
-    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); saveLocal(); });
-    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); saveLocal(); });
+    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); commit(); });
+    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); commit(); });
   }
 
+  const FIELD_LABELS = { title: 'Название', tags: 'Теги (через запятую)', role: 'Роль', year: 'Год', linkedCase: 'Связанный кейс', image: 'Изображение' };
   function renderArchiveRepeater(sel, arr, path, fields) {
     const root = $(sel);
     root.innerHTML = arr.map((item, i) => `
       <div class="repeater-item">
         ${fields.map((f) => {
           const val = item[f];
+          const fieldPath = `${path}.${i}.${f}`;
+          const label = FIELD_LABELS[f] || f;
+          if (f === 'image') return imageField(label, val || '', fieldPath);
+          if (f === 'linkedCase') return select(label, val || '', fieldPath, caseLinkOptions());
           const isArr = Array.isArray(val);
-          const inputType = isArr ? 'textarea' : 'input';
-          const inputAttrs = isArr ? `data-type="array" rows="2"` : `type="text"`;
-          const displayVal = isArr ? (val || []).join(', ') : esc(val || '');
-          return `<div class="field"><label>${esc(f)}</label><${inputType} ${inputAttrs} value="${isArr ? '' : displayVal}" data-bind="${path}.${i}.${f}">${isArr ? displayVal : ''}</${inputType}></div>`;
+          if (isArr) return `<div class="field"><label>${esc(label)}</label><textarea data-type="array" rows="2" data-bind="${fieldPath}">${esc((val || []).join(', '))}</textarea></div>`;
+          return `<div class="field"><label>${esc(label)}</label><input type="text" value="${esc(val || '')}" data-bind="${fieldPath}"></div>`;
         }).join('')}
-        <div class="admin-toolbar"><button class="small-btn" data-archive-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-archive-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn" data-archive-remove="${path}" data-index="${i}">Удалить</button></div>
+        <div class="admin-toolbar"><button class="small-btn" data-archive-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-archive-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn danger" data-archive-remove="${path}" data-index="${i}">Удалить</button></div>
       </div>`).join('');
-    $$('[data-archive-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.archiveMove === 'up' ? -1 : 1); saveLocal(); });
-    $$('[data-archive-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.archiveRemove).splice(Number(btn.dataset.index), 1); saveLocal(); });
+    $$('[data-archive-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.archiveMove === 'up' ? -1 : 1); commit(); });
+    $$('[data-archive-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.archiveRemove).splice(Number(btn.dataset.index), 1); commit(); });
     bindSimpleFields(root);
   }
 
@@ -699,7 +1016,7 @@
       <div class="admin-card">
         <h3>Обо мне</h3>
         ${input('Заголовок', a.heading, 'about.heading')}
-        ${input('Путь к портрету', a.photo, 'about.photo')}
+        ${imageField('Портрет', a.photo, 'about.photo')}
         ${textarea('Позиционирование', a.positioning, 'about.positioning')}
         ${input('Метка компетенций', a.competenciesLabel, 'about.competenciesLabel')}
         ${input('Метка опыта', a.experienceLabel, 'about.experienceLabel')}
@@ -717,8 +1034,8 @@
       </div>`;
     renderStringRepeater('#competenciesList', a.competencies, 'about.competencies');
     renderObjectRepeater('#skillBlocksList', a.skillBlocks, 'about.skillBlocks', ['title', 'note']);
-    $('#addCompetency').onclick = () => { a.competencies.push('Новая компетенция'); saveLocal(); };
-    $('#addSkillBlock').onclick = () => { a.skillBlocks.push({ title: 'Новый блок', note: 'Описание' }); saveLocal(); };
+    $('#addCompetency').onclick = () => { a.competencies.push('Новая компетенция'); commit(); };
+    $('#addSkillBlock').onclick = () => { a.skillBlocks.push({ title: 'Новый блок', note: 'Описание' }); commit(); };
     bindSimpleFields($('#panel-about'));
   }
 
@@ -729,8 +1046,8 @@
         ${keys.map((k) => `<div class="field"><label>${esc(k)}</label><input value="${esc(item[k] || '')}" data-bind="${path}.${i}.${k}"></div>`).join('')}
         <div class="admin-toolbar"><button class="small-btn" data-object-move="up" data-path="${path}" data-index="${i}">↑</button><button class="small-btn" data-object-move="down" data-path="${path}" data-index="${i}">↓</button><button class="small-btn" data-object-remove="${path}" data-index="${i}">Удалить</button></div>
       </div>`).join('');
-    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); saveLocal(); });
-    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); saveLocal(); });
+    $$('[data-object-move]', root).forEach((btn) => btn.onclick = () => { moveInArray(getByPath(data, btn.dataset.path), Number(btn.dataset.index), btn.dataset.objectMove === 'up' ? -1 : 1); commit(); });
+    $$('[data-object-remove]', root).forEach((btn) => btn.onclick = () => { getByPath(data, btn.dataset.objectRemove).splice(Number(btn.dataset.index), 1); commit(); });
     bindSimpleFields(root);
   }
 
@@ -752,7 +1069,7 @@
         <button class="small-btn" id="addService">Добавить услугу</button>
       </div>`;
     renderStringRepeater('#servicesList', c.services, 'contacts.services');
-    $('#addService').onclick = () => { c.services.push('Новая услуга'); saveLocal(); };
+    $('#addService').onclick = () => { c.services.push('Новая услуга'); commit(); };
     bindSimpleFields($('#panel-contacts'));
   }
 
@@ -807,7 +1124,8 @@
       notes: 'Заменить текст и изображения перед публикацией.'
     });
     activeCaseId = id;
-    saveLocal();
+    activeTab = 'cases';
+    commit();
   }
 
   function duplicateCase() {
@@ -820,7 +1138,7 @@
     copy.order = data.cases.length + 1;
     data.cases.push(copy);
     activeCaseId = copy.id;
-    saveLocal();
+    commit();
   }
 
   function deleteCase() {
@@ -830,7 +1148,7 @@
     if (!ok) return;
     data.cases.splice(index, 1);
     activeCaseId = data.cases[0]?.id || null;
-    saveLocal();
+    commit();
   }
 
   function bindTabs() {
@@ -838,7 +1156,15 @@
       $$('.admin-tab').forEach((x) => x.classList.remove('active'));
       $$('.admin-panel').forEach((x) => x.classList.remove('active'));
       tab.classList.add('active');
-      $(`#panel-${tab.dataset.tab}`).classList.add('active');
+      activeTab = tab.dataset.tab;
+      const panel = $(`#panel-${activeTab}`);
+      panel.classList.add('active');
+      // Перерисовать актуальными данными и проиграть анимацию входа (один раз).
+      renderActivePanel();
+      panel.classList.remove('panel-enter');
+      void panel.offsetWidth;
+      panel.classList.add('panel-enter');
+      setTimeout(() => panel.classList.remove('panel-enter'), 700);
     });
   }
 
@@ -859,6 +1185,8 @@
         data = JSON.parse(reader.result);
         localStorage.setItem(LS_KEY, JSON.stringify(data, null, 2));
         renderAll();
+        setStatus('saved');
+        schedulePreviewReload();
       } catch (e) {
         alert('Не удалось прочитать JSON-файл.');
       }
@@ -867,7 +1195,7 @@
   }
 
   async function publishToSite() {
-    const password = prompt('Введите пароль администратора для публикации:');
+    const password = getAdminPassword();
     if (!password) return;
 
     const btn = document.getElementById('publishBtn');
@@ -882,9 +1210,16 @@
         body: JSON.stringify({ content: data, password }),
       });
 
+      if (res.status === 401) {
+        sessionStorage.removeItem(PW_KEY);
+        alert('Неверный пароль администратора.');
+        return;
+      }
+
       const result = await res.json();
 
       if (res.ok && result.success) {
+        setStatus('published');
         alert('Готово! Сайт обновится через ~1-2 минуты после деплоя Vercel.');
       } else {
         alert('Ошибка: ' + (result.error || 'Неизвестная ошибка'));
@@ -951,11 +1286,30 @@
     });
   }
 
+  function bindPreview() {
+    const toggle = $('#togglePreview');
+    const refresh = $('#refreshPreview');
+    const openTab = $('#openPreviewTab');
+    if (toggle) toggle.onclick = () => {
+      document.body.classList.toggle('preview-on');
+      const on = document.body.classList.contains('preview-on');
+      toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+      toggle.textContent = on ? 'Скрыть превью' : 'Показать превью';
+      if (on) schedulePreviewReload();
+    };
+    if (refresh) refresh.onclick = () => { const f = $('#livePreview'); if (f) f.contentWindow.location.reload(); };
+    if (openTab) openTab.onclick = () => window.open('index.html', '_blank');
+  }
+
   async function init() {
     data = await loadData();
     data = deepMerge(data, JSON.parse(JSON.stringify(EMBEDDED_CONTENT)));
+    const activeTabEl = $('.admin-tab.active');
+    if (activeTabEl) activeTab = activeTabEl.dataset.tab;
     bindTabs();
+    bindPreview();
     renderAll();
+    setStatus('saved');
     $('#publishBtn').onclick = publishToSite;
     $('#exportJson').onclick = exportJson;
     $('#importJson').onchange = (e) => e.target.files[0] && importJson(e.target.files[0]);

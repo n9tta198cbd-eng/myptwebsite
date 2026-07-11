@@ -264,3 +264,93 @@ body.no-fx .tx-noise,body.no-fx .tx-scan{display:none}
   .system-bar{padding:10px 16px}
   .admin-topbar{padding:16px}
 }
+
+/* =========================================================
+ADMIN 2.0 — статус, превью картинок, живое превью, анимации, адаптив
+========================================================= */
+.admin-topbar__head{display:flex;flex-direction:column;gap:2px}
+.admin-btn,.admin-link{transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.admin-btn:hover,.admin-link:hover{border-color:var(--accent);color:var(--fg)}
+.admin-btn--accent{border-color:var(--accent);color:var(--fg)}
+.admin-btn--accent:hover{background:var(--accent);color:#000}
+
+/* Индикатор статуса сохранения */
+.save-status{display:inline-flex;align-items:center;gap:8px;margin-top:6px;padding:4px 10px;border:1px solid var(--line);font:10px var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim);width:max-content;transition:color .25s,border-color .25s}
+.save-status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--fg-faint);transition:background .25s}
+.save-status[data-state="saving"]{color:#d9b25a;border-color:#5a4a22}
+.save-status[data-state="saving"]::before{background:#d9b25a;animation:blink 1s infinite}
+.save-status[data-state="saved"]{color:#7fb37f;border-color:#2f4a2f}
+.save-status[data-state="saved"]::before{background:#7fb37f}
+.save-status[data-state="published"]{color:var(--accent);border-color:var(--accent-dim)}
+.save-status[data-state="published"]::before{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.save-status[data-state="error"]{color:#d97a7a;border-color:#5a2a2a}
+.save-status[data-state="error"]::before{background:#d97a7a}
+
+/* Кнопки-репитеры и опасное действие */
+.small-btn{transition:color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease)}
+.small-btn.danger:hover{color:#d97a7a;border-color:#5a2a2a}
+.admin-tab{transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.admin-tab.active{border-color:var(--accent-dim)}
+
+/* Поле изображения с превью */
+.img-field__row{display:flex;gap:12px;align-items:flex-start}
+.img-thumb{flex:0 0 84px;width:84px;height:84px;border:1px solid var(--line);background:var(--bg-panel-alt);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb:empty,.img-thumb--empty{background:repeating-linear-gradient(135deg,var(--bg-panel-alt),var(--bg-panel-alt) 8px,var(--bg-panel) 8px,var(--bg-panel) 16px)}
+.img-field__ctrl{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.img-upload{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;width:max-content}
+
+/* Поиск и пилюли кейсов */
+.case-search{margin-bottom:12px}
+.case-search input{width:100%}
+.case-item{cursor:pointer;text-align:left;width:100%;transition:border-color .18s var(--ease),background .18s var(--ease)}
+.case-item:hover{border-color:var(--accent-dim)}
+.case-item.active{border-color:var(--accent);background:var(--bg-panel-alt)}
+.case-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill-featured{color:var(--accent);border-color:var(--accent-dim)}
+.pill-draft{color:#d9b25a;border-color:#5a4a22}
+.pill-hidden{color:var(--fg-faint);opacity:.75}
+
+/* Заголовок секции кейса */
+.section-item{transition:border-color .18s var(--ease)}
+.section-item:hover{border-color:var(--line)}
+.section-item__head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.section-item__badge{padding:3px 8px;border:1px solid var(--accent-dim);color:var(--accent);font:10px var(--font-mono);text-transform:uppercase;letter-spacing:.08em}
+.section-item__head .admin-toolbar{margin-bottom:0}
+
+/* Живое превью */
+.admin-preview{display:none}
+body.preview-on .admin-shell{grid-template-columns:230px minmax(0,1fr) minmax(340px,38%)}
+body.preview-on .admin-preview{display:flex;flex-direction:column;position:sticky;top:88px;height:calc(100vh - 88px);border-left:1px solid var(--line);background:var(--bg-panel);z-index:5}
+.admin-preview__bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--fg-dim)}
+.admin-preview__ctrl{display:flex;gap:8px}
+.admin-preview__frame{flex:1;position:relative;background:#000;overflow:hidden}
+.admin-preview__frame::before{content:"загрузка превью…";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--fg-faint);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.08em;z-index:0}
+#livePreview{position:relative;z-index:1;width:100%;height:100%;border:0;display:block}
+
+/* Анимации входа панели */
+@keyframes admin-fade-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.panel-enter > .admin-card{animation:admin-fade-up .38s var(--ease) both}
+.panel-enter > .admin-card:nth-child(2){animation-delay:.05s}
+.panel-enter > .admin-card:nth-child(3){animation-delay:.1s}
+.panel-enter > .admin-card:nth-child(4){animation-delay:.15s}
+.panel-enter > .admin-card:nth-child(n+5){animation-delay:.2s}
+
+/* Адаптив админки */
+@media (max-width:1200px){
+  body.preview-on .admin-shell{grid-template-columns:200px minmax(0,1fr) minmax(300px,42%)}
+}
+@media (max-width:1000px){
+  body.preview-on .admin-shell{grid-template-columns:1fr}
+  body.preview-on .admin-preview{position:static;height:70vh;border-left:none;border-top:1px solid var(--line)}
+  .admin-sidebar{flex-direction:row;overflow-x:auto;gap:6px;position:sticky;top:0;z-index:20;padding:12px}
+  .admin-tab{flex:0 0 auto;white-space:nowrap}
+}
+@media (max-width:700px){
+  .admin-topbar__head{flex-direction:column}
+  .admin-actions{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .admin-btn,.admin-link{flex:0 0 auto;min-height:44px}
+  .admin-tab{min-height:44px;display:flex;align-items:center}
+  .small-btn{min-height:40px}
+  .img-thumb{flex-basis:64px;width:64px;height:64px}
+}
