@@ -643,8 +643,8 @@
     "ctaLabel": "Написать"
   },
   "uiSettings": {
-    "scanlines": true,
-    "noise": true,
-    "reducedMotionRespected": true
+    "scanlines": false,
+    "noise": false,
+    "reducedMotionRespected": false
   }
 }
