@@ -568,39 +568,8 @@
       "image": "images/placeholders/art-7.svg"
     }
   ],
-  "socioVisualProjects": [
-    {
-      "title": "Визуальные системы влияния",
-      "image": "images/placeholders/social-manifest.svg",
-      "text": "**Визуальная плотность интерфейса** управляет скоростью принятия решений.\n\nПовторяющиеся графические паттерны повышают узнаваемость быстрее текста. Порядок предъявления визуальных элементов формирует иерархию доверия."
-    }
-  ],
-  "drafts": [
-    {
-      "title": "Fadetaileur",
-      "reason": "Проект приостановлен на этапе концепции",
-      "year": "2025",
-      "image": "images/placeholders/draft-1.svg"
-    },
-    {
-      "title": "Платья супрематизм",
-      "reason": "Не найден производственный партнёр",
-      "year": "2025",
-      "image": "images/placeholders/draft-2.svg"
-    },
-    {
-      "title": "Мерч для Мелстроя",
-      "reason": "Проект не вышел в производство",
-      "year": "2024",
-      "image": "images/placeholders/draft-3.svg"
-    },
-    {
-      "title": "Сайт для Elysium",
-      "reason": "Заморожен на этапе прототипа",
-      "year": "2025",
-      "image": "images/placeholders/draft-4.svg"
-    }
-  ],
+  "socioVisualProjects": [],
+  "drafts": [],
   "creativeWorks": [
     {
       "title": "Пара постеров",
