@@ -13,9 +13,9 @@
       "featuredCases": true,
       "branding": true,
       "artDirection": true,
-      "socioVisual": true,
-      "drafts": true,
-      "creativeWorks": true,
+      "socioVisual": false,
+      "drafts": false,
+      "creativeWorks": false,
       "about": true
     }
   },
