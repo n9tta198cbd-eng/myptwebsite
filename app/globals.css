@@ -30,6 +30,9 @@
   }
 
   body {
+    /* якорь для рамки: она absolute inset-0 и должна тянуться
+       на всю высоту документа, а не окна */
+    position: relative;
     background-color: var(--color-ink);
     color: var(--color-bone);
     font-family: var(--font-sans);

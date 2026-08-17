@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import GrainOverlay from '@/components/ui/GrainOverlay';
 import Nav from '@/components/Nav';
 import FrameOverlay from '@/components/ui/FrameOverlay';
+import PageNoise from '@/components/ui/PageNoise';
 import Preloader from '@/components/Preloader';
 import SmoothScroll from '@/components/SmoothScroll';
 import { SITE } from '@/lib/site';
@@ -81,6 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           К работам
         </a>
 
+        <PageNoise />
         <Preloader />
         <SmoothScroll />
         <FrameOverlay />

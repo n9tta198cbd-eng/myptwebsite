@@ -1,8 +1,13 @@
 /* Орнаментальная рамка поверх контента: бордюр по периметру и две
    колонны вверху, середина прозрачная.
 
-   Слой лежит НАД элементами дизайна (z-35 — выше навигации и секций),
-   но ниже зерна, курсора, модалки и прелоадера: рамка не должна
+   Слой привязан к СТРАНИЦЕ, а не к окну: absolute inset-0 внутри body
+   (у него position: relative), поэтому растягивается на всю высоту
+   документа и при скролле по рамке проезжает целиком — верхний край
+   в начале страницы, нижний в конце.
+
+   Лежит НАД элементами дизайна (z-35 — выше навигации и секций), но
+   ниже зерна, курсора, модалки и прелоадера: рамка не должна
    перекрывать открытый кейс и курсор.
 
    pointer-events: none — клики проходят насквозь.
@@ -10,7 +15,7 @@
 export default function FrameOverlay() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[35] bg-[url('/assets/bg-frame-sm.webp')] bg-top bg-no-repeat bg-cover md:bg-[url('/assets/bg-frame.webp')]"
+      className="pointer-events-none absolute inset-0 z-[35] bg-[url('/assets/bg-frame-sm.webp')] bg-no-repeat [background-size:100%_100%] md:bg-[url('/assets/bg-frame.webp')]"
       aria-hidden="true"
     />
   );
