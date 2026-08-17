@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+/* ---------- Дизайн-токены ---------- */
+
+@theme {
+  --color-parchment: #efe6d0;
+  --color-ink: #16130e;
+  --color-blood: #8e1616;
+  --color-gold: #b08d3e;
+  --color-bone: #f5efe0;
+
+  /* Pirata One — только латиница (кириллицы в шрифте нет).
+     Русские заголовки набираются антиквой Cormorant. */
+  --font-blackletter: var(--font-pirata), "Times New Roman", serif;
+  --font-antiqua: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --text-hero: clamp(4rem, 14vw, 12rem);
+  --text-section: clamp(2.5rem, 7vw, 6rem);
+  --text-wordmark: clamp(4rem, 16vw, 15rem);
+}
+
+/* ---------- База ---------- */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--color-parchment);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.65;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-blood);
+    color: var(--color-parchment);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blood);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-weight: 400;
+  }
+
+  /* Нативный курсор скрывается только когда работает кастомный */
+  @media (pointer: fine) {
+    body[data-cursor-active="true"],
+    body[data-cursor-active="true"] * {
+      cursor: none;
+    }
+  }
+}
+
+/* ---------- Утилиты ---------- */
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* Обе грани карточки при флипе */
+@utility face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* ---------- Зерно ---------- */
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-3%, 2%);
+  }
+  50% {
+    transform: translate(2%, -3%);
+  }
+  75% {
+    transform: translate(-2%, -2%);
+  }
+  100% {
+    transform: translate(3%, 1%);
+  }
+}
+
+.grain-layer {
+  animation: grain-shift 1s steps(8) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain-layer {
+    animation: none;
+  }
+}
+
+/* ---------- Бегущая строка ---------- */
+
+@keyframes marquee-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee-slide var(--marquee-duration, 28s) linear infinite;
+  animation-play-state: running;
+  will-change: transform;
+}
+
+/* ---------- Кольцо текста в hero ---------- */
+
+@keyframes ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ring-spin {
+  animation: ring-spin 20s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* ---------- Reduced motion: оставляем только простые fade ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .ring-spin {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
