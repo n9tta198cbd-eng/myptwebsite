@@ -112,21 +112,18 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
                 <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-charcoal via-transparent to-transparent" />
               </div>
 
-              {/* подпись */}
-              <div className="relative z-10 mx-5 mt-4 mb-5 flex min-h-[86px] flex-col items-center justify-start gap-1.5 text-center">
-                <span className="flex w-full items-center gap-2 text-gold/60" aria-hidden="true">
-                  <span className="h-px flex-1 bg-gold/40" />
+              {/* плашка */}
+              <div className="relative z-10 mx-5 mt-3 mb-5 flex min-h-[92px] flex-col items-center justify-center gap-1.5 border border-ink/60 bg-bone px-3 py-3 text-center">
+                <span className="flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-blood">
                   <Fleur size={10} />
-                  <span className="h-px flex-1 bg-gold/40" />
+                  {item.num}
+                  <Fleur size={10} />
                 </span>
-
-                <span className="font-mono text-[10px] tracking-[0.18em] text-blood">
-                  N° {item.num}
-                </span>
-                <h3 className="font-antiqua text-[17px] leading-[1.14] tracking-[0.05em] text-bone uppercase">
+                {/* плашка светлая, поэтому текст на ней тёмный */}
+                <h3 className="font-antiqua text-[17px] leading-[1.14] tracking-[0.05em] text-ink uppercase">
                   {item.title}
                 </h3>
-                <p className="font-mono text-[9.5px] tracking-[0.16em] text-bone/45 uppercase">
+                <p className="font-mono text-[9.5px] tracking-[0.16em] text-ink/55 uppercase">
                   {item.tag}
                 </p>
               </div>
