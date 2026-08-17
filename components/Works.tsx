@@ -38,7 +38,7 @@ export default function Works() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
           variants={gridVariants}
-          className="mt-14 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3"
+          className="mx-auto mt-14 grid max-w-[1080px] grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-2 xl:grid-cols-3"
         >
           {cases.map((item) => (
             <li key={item.id}>

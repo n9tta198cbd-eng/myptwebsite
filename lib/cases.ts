@@ -8,6 +8,8 @@ export type Case = {
   title: string;
   subtitle: string;
   category: string;
+  /** Короткая подпись для плашки карточки — полная категория туда не влезает. */
+  tag: string;
   year: string;
   client: string;
   role: string;
@@ -27,6 +29,7 @@ export const cases: Case[] = [
     title: 'Консоль Киберклуб',
     subtitle: 'Полный брендинг: концепция и визуальный стиль',
     category: 'Брендинг',
+    tag: 'Брендинг',
     year: '2026',
     client: 'Консоль',
     role: 'Дизайнер айдентики, автор концепции',
@@ -44,6 +47,7 @@ export const cases: Case[] = [
     title: 'BabyCute (Gazgolder)',
     subtitle: 'Два клипа и собственный AI-релайт пайплайн',
     category: 'Арт-дирекшн',
+    tag: 'Арт-дирекшн',
     year: '2026',
     client: 'BabyCute / Gazgolder',
     role: 'AI-видео инженер, визуальный художник',
@@ -61,6 +65,7 @@ export const cases: Case[] = [
     title: 'Глеб Костин',
     subtitle: 'Иконки, маскот, liveweeks и AI-пайплайны',
     category: 'Социовизуальная инженерия',
+    tag: 'Социовизуальное',
     year: '2026',
     client: 'Глеб Костин',
     role: 'Арт-директор, дизайнер, AI-пайплайн',
@@ -78,6 +83,7 @@ export const cases: Case[] = [
     title: 'Три дня дождя',
     subtitle: 'Мерч-коллекция в гранж-стилистике',
     category: 'Арт-дирекшн',
+    tag: 'Арт-дирекшн',
     year: '2025',
     client: 'Три дня дождя',
     role: 'Дизайнер мерча, связка с производством',
@@ -95,6 +101,7 @@ export const cases: Case[] = [
     title: '32inches',
     subtitle: 'Пересборка бренда: стиль, позиционирование, комьюнити',
     category: 'Социовизуальная инженерия',
+    tag: 'Социовизуальное',
     year: '2022 — н.в.',
     client: '32inches',
     role: 'Арт-директор бренда',
@@ -112,6 +119,7 @@ export const cases: Case[] = [
     title: 'Elysium Studio',
     subtitle: 'Операционная система студии',
     category: 'Социовизуальная инженерия',
+    tag: 'Социовизуальное',
     year: '2026',
     client: 'Elysium Studio',
     role: 'Арт-директор студии',
