@@ -45,7 +45,7 @@ export default function Footer() {
                   data-cursor="link"
                   target={s.href.startsWith('http') ? '_blank' : undefined}
                   rel={s.href.startsWith('http') ? 'noreferrer' : undefined}
-                  className="grid size-12 place-items-center rounded-full border border-ink/50 text-ink transition-colors duration-300 hover:border-blood hover:bg-blood hover:text-parchment"
+                  className="grid size-12 place-items-center rounded-full border border-gold/50 text-bone/70 transition-colors duration-300 hover:border-blood hover:bg-blood hover:text-bone"
                 >
                   <Sigil size={22} />
                 </a>
@@ -53,7 +53,7 @@ export default function Footer() {
             ))}
           </ul>
 
-          <p className="label text-ink/55">{CONTACTS.location}</p>
+          <p className="label text-bone/45">{CONTACTS.location}</p>
         </div>
 
         {/* гигантский вордмарк, частично уходит за нижний край */}
@@ -63,8 +63,8 @@ export default function Footer() {
           </span>
         </div>
 
-        <div className="flex items-center justify-center border-t border-ink/25 py-5">
-          <p className="label text-center text-ink/55">
+        <div className="flex items-center justify-center border-t border-gold/30 py-5">
+          <p className="label text-center text-bone/45">
             © {SITE.copyrightYear} {SITE.name} — {SITE.footerNote}
           </p>
         </div>

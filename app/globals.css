@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
-/* ---------- Дизайн-токены ---------- */
+/* ---------- Дизайн-токены: gothic occult revival ---------- */
 
 @theme {
-  --color-parchment: #efe6d0;
-  --color-ink: #16130e;
-  --color-blood: #8e1616;
-  --color-gold: #b08d3e;
-  --color-bone: #f5efe0;
+  --color-ink: #0d0d0d; /* фон страницы */
+  --color-charcoal: #1a1a1a; /* приподнятые поверхности: карточки, модалка */
+  --color-bone: #e8e2d0; /* текст, линии, гравюры */
+  --color-blood: #a32626; /* акценты, hover, печати */
+  --color-gold: #8a7440; /* тонкие орнаменты, рамки */
 
   /* Pirata One — только латиница (кириллицы в шрифте нет).
      Русские заголовки набираются антиквой Cormorant. */
@@ -16,9 +16,9 @@
   --font-sans: var(--font-plex-sans), system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  --text-hero: clamp(4rem, 14vw, 12rem);
+  --text-hero: clamp(3.1rem, 13.2vw, 11rem);
   --text-section: clamp(2.5rem, 7vw, 6rem);
-  --text-wordmark: clamp(4rem, 16vw, 15rem);
+  --text-wordmark: clamp(2.4rem, 11.5vw, 9rem);
 }
 
 /* ---------- База ---------- */
@@ -30,8 +30,8 @@
   }
 
   body {
-    background-color: var(--color-parchment);
-    color: var(--color-ink);
+    background-color: var(--color-ink);
+    color: var(--color-bone);
     font-family: var(--font-sans);
     font-size: 17px;
     line-height: 1.65;
@@ -42,7 +42,7 @@
 
   ::selection {
     background-color: var(--color-blood);
-    color: var(--color-parchment);
+    color: var(--color-bone);
   }
 
   :focus-visible {
@@ -88,7 +88,9 @@
   transform-style: preserve-3d;
 }
 
-/* ---------- Зерно ---------- */
+/* ---------- Зерно ----------
+   На тёмном фоне multiply не даёт ничего — зерно должно осветлять,
+   поэтому screen. */
 
 @keyframes grain-shift {
   0% {

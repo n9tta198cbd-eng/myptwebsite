@@ -77,7 +77,7 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
               activate();
             }
           }}
-          className="relative block aspect-[2/3.5] w-full [transform-style:preserve-3d] transition-shadow duration-300 group-hover:shadow-[0_0_0_1.5px_var(--color-blood),0_0_26px_-4px_rgba(142,22,22,0.6),0_20px_44px_-14px_rgba(22,19,14,0.5)]"
+          className="relative block aspect-[2/3.5] w-full [transform-style:preserve-3d] transition-shadow duration-300 group-hover:shadow-[0_0_0_1px_var(--color-blood),0_0_30px_-4px_color-mix(in_srgb,var(--color-blood)_50%,transparent),0_24px_50px_-20px_var(--color-ink)]"
         >
           <motion.div
             animate={{ rotateY: flipped ? 180 : 0 }}
@@ -85,21 +85,21 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
             className="relative size-full [transform-style:preserve-3d]"
           >
             {/* ЛИЦО */}
-            <div className="face flex flex-col overflow-hidden bg-ink">
-              {/* внутренняя рамка */}
-              <span className="pointer-events-none absolute inset-[6px] z-10 border border-parchment/25" />
-              <span className="pointer-events-none absolute inset-[11px] z-10 border border-gold/25" />
+            <div className="face flex flex-col overflow-hidden border border-gold/60 bg-charcoal">
+              {/* внутренние рамки */}
+              <span className="pointer-events-none absolute inset-[6px] z-10 border border-bone/18" />
+              <span className="pointer-events-none absolute inset-[11px] z-10 border border-gold/30" />
 
               {/* римская цифра и флёр */}
               <div className="relative z-10 flex items-start justify-between px-5 pt-5">
-                <span className="grid size-[26px] place-items-center border border-parchment/45 font-antiqua text-[13px] leading-none text-parchment">
+                <span className="grid size-[26px] place-items-center border border-bone/35 font-antiqua text-[13px] leading-none text-bone">
                   {numeral}
                 </span>
-                <Fleur size={16} className="text-gold/80" />
+                <Fleur size={16} className="text-gold" />
               </div>
 
               {/* иллюстрация */}
-              <div className="relative mx-5 mt-3 flex-1 overflow-hidden border border-parchment/20">
+              <div className="relative mx-5 mt-3 flex-1 overflow-hidden border border-gold/30">
                 <Image
                   src={item.cover}
                   alt={`${item.title} — обложка кейса`}
@@ -108,32 +108,36 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
                   sizes="(max-width: 767px) 88vw, (max-width: 1279px) 44vw, 344px"
                   className="object-cover"
                 />
-                {/* затемнение снизу, чтобы гравюра уходила в фон карты */}
-                <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-ink/45 to-transparent" />
+                {/* гравюра уходит в фон карты */}
+                <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-charcoal via-transparent to-transparent" />
               </div>
 
-              {/* плашка */}
-              <div className="relative z-10 mx-5 mt-3 mb-5 flex min-h-[92px] flex-col items-center justify-center gap-1.5 border border-ink/60 bg-bone px-3 py-3 text-center">
-                <span className="flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-blood">
+              {/* подпись */}
+              <div className="relative z-10 mx-5 mt-4 mb-5 flex min-h-[86px] flex-col items-center justify-start gap-1.5 text-center">
+                <span className="flex w-full items-center gap-2 text-gold/60" aria-hidden="true">
+                  <span className="h-px flex-1 bg-gold/40" />
                   <Fleur size={10} />
-                  {item.num}
-                  <Fleur size={10} />
+                  <span className="h-px flex-1 bg-gold/40" />
                 </span>
-                <h3 className="font-antiqua text-[17px] leading-[1.14] tracking-[0.05em] uppercase">
+
+                <span className="font-mono text-[10px] tracking-[0.18em] text-blood">
+                  N° {item.num}
+                </span>
+                <h3 className="font-antiqua text-[17px] leading-[1.14] tracking-[0.05em] text-bone uppercase">
                   {item.title}
                 </h3>
-                <p className="font-mono text-[9.5px] tracking-[0.16em] text-ink/55 uppercase">
+                <p className="font-mono text-[9.5px] tracking-[0.16em] text-bone/45 uppercase">
                   {item.tag}
                 </p>
               </div>
             </div>
 
             {/* ОБОРОТ */}
-            <div className="face overflow-hidden bg-ink [transform:rotateY(180deg)]">
+            <div className="face overflow-hidden border border-gold/60 bg-charcoal [transform:rotateY(180deg)]">
               <CardBack className="absolute inset-0 size-full" />
 
               <div className="relative flex h-full flex-col items-center justify-end gap-4 p-6 pb-8 text-center">
-                <p className="font-antiqua text-[18px] leading-snug text-parchment/85 italic">
+                <p className="font-antiqua text-[18px] leading-snug text-bone/85 italic">
                   {item.subtitle}
                 </p>
                 <button
@@ -143,7 +147,7 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
                     e.stopPropagation();
                     onOpen();
                   }}
-                  className="border border-parchment/60 px-4 py-2 font-mono text-[10.5px] tracking-[0.16em] text-parchment uppercase transition-colors duration-200 hover:border-blood hover:bg-blood"
+                  className="border border-gold/70 px-4 py-2 font-mono text-[10.5px] tracking-[0.16em] text-bone uppercase transition-colors duration-200 hover:border-blood hover:bg-blood"
                 >
                   Открыть
                 </button>

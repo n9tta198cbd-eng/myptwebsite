@@ -60,7 +60,7 @@ export default function RotatingRing({ size = 340 }: { size?: number }) {
       </defs>
       <g ref={ref}>
         <text
-          fill="var(--color-ink)"
+          fill="var(--color-bone)"
           fontSize="13.5"
           letterSpacing="3.1"
           style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}

@@ -49,16 +49,16 @@ export default function Marquee() {
 
   return (
     <div className="relative -my-2 w-screen overflow-hidden py-6 md:py-10">
-      <div className="-mx-[4vw] w-[108vw] -rotate-2 overflow-hidden border-y border-ink/60 bg-ink py-3 md:py-4">
+      <div className="-mx-[4vw] w-[108vw] -rotate-2 overflow-hidden border-y border-gold/40 bg-blood py-3 md:py-4">
         <div ref={trackRef} className="flex w-max will-change-transform">
           <span
-            className="shrink-0 font-blackletter text-3xl whitespace-nowrap text-parchment md:text-5xl"
+            className="shrink-0 font-blackletter text-3xl whitespace-nowrap text-bone md:text-5xl"
             aria-hidden="true"
           >
             {line}
           </span>
           <span
-            className="shrink-0 font-blackletter text-3xl whitespace-nowrap text-parchment md:text-5xl"
+            className="shrink-0 font-blackletter text-3xl whitespace-nowrap text-bone md:text-5xl"
             aria-hidden="true"
           >
             {line}

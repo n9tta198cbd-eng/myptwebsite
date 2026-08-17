@@ -14,14 +14,14 @@ export default function CardBack({ className = '' }: { className?: string }) {
       className={className}
       preserveAspectRatio="xMidYMid slice"
     >
-      <rect width="200" height="350" fill="var(--color-ink)" />
+      <rect width="200" height="350" fill="var(--color-charcoal)" />
 
       {/* двойная рамка */}
-      <rect x="7" y="7" width="186" height="336" stroke="var(--color-parchment)" strokeWidth="1.4" opacity="0.55" />
-      <rect x="13" y="13" width="174" height="324" stroke="var(--color-gold)" strokeWidth="0.9" opacity="0.6" />
+      <rect x="7" y="7" width="186" height="336" stroke="var(--color-bone)" strokeWidth="1.4" opacity="0.45" />
+      <rect x="13" y="13" width="174" height="324" stroke="var(--color-gold)" strokeWidth="0.9" opacity="0.75" />
 
       {/* лучи от центра */}
-      <g stroke="var(--color-parchment)" strokeWidth="0.6" opacity="0.32">
+      <g stroke="var(--color-bone)" strokeWidth="0.6" opacity="0.26">
         {RAYS.map((a, i) => (
           <line
             key={i}
@@ -33,17 +33,28 @@ export default function CardBack({ className = '' }: { className?: string }) {
         ))}
       </g>
 
-      <circle cx={cx} cy={cy} r="50" stroke="var(--color-gold)" strokeWidth="1.1" opacity="0.85" />
-      <circle cx={cx} cy={cy} r="44" stroke="var(--color-parchment)" strokeWidth="0.8" opacity="0.5" />
+      <circle cx={cx} cy={cy} r="50" stroke="var(--color-gold)" strokeWidth="1.1" opacity="0.9" />
+      <circle cx={cx} cy={cy} r="44" stroke="var(--color-bone)" strokeWidth="0.8" opacity="0.4" />
 
       {/* треугольник со всевидящим оком */}
-      <path d={`M ${cx} ${cy - 30} L ${cx + 27} ${cy + 18} H ${cx - 27} Z`} stroke="var(--color-parchment)" strokeWidth="1.2" opacity="0.9" />
-      <ellipse cx={cx} cy={cy + 2} rx="15" ry="8.5" stroke="var(--color-parchment)" strokeWidth="1.1" />
+      <path
+        d={`M ${cx} ${cy - 30} L ${cx + 27} ${cy + 18} H ${cx - 27} Z`}
+        stroke="var(--color-bone)"
+        strokeWidth="1.2"
+        opacity="0.85"
+      />
+      <ellipse cx={cx} cy={cy + 2} rx="15" ry="8.5" stroke="var(--color-bone)" strokeWidth="1.1" />
       <circle cx={cx} cy={cy + 2} r="4" fill="var(--color-blood)" />
 
       {/* флёроны сверху и снизу */}
       {[78, 272].map((y, i) => (
-        <g key={y} stroke="var(--color-parchment)" strokeWidth="0.9" opacity="0.6" transform={i ? `translate(0 ${y}) scale(1 -1) translate(0 ${-y})` : undefined}>
+        <g
+          key={y}
+          stroke="var(--color-bone)"
+          strokeWidth="0.9"
+          opacity="0.45"
+          transform={i ? `translate(0 ${y}) scale(1 -1) translate(0 ${-y})` : undefined}
+        >
           <path d={`M ${cx} ${y - 14} c 14 6 22 16 22 26 c -10 0 -18 -8 -22 -18`} />
           <path d={`M ${cx} ${y - 14} c -14 6 -22 16 -22 26 c 10 0 18 -8 22 -18`} />
           <path d={`M ${cx - 30} ${y + 16} h 60`} />
@@ -63,7 +74,7 @@ export default function CardBack({ className = '' }: { className?: string }) {
           d={`M ${x} ${y - 6} L ${x + 6} ${y} L ${x} ${y + 6} L ${x - 6} ${y} Z`}
           stroke="var(--color-gold)"
           strokeWidth="0.9"
-          opacity="0.8"
+          opacity="0.9"
         />
       ))}
     </svg>

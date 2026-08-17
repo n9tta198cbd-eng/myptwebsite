@@ -29,12 +29,12 @@ export default function Hero() {
           <span className="sr-only"> — {SITE.role}</span>
         </h1>
 
-        <p className="label mt-5 text-ink/75">{SITE.heroSubtitle}</p>
+        <p className="label mt-5 text-bone/70">{SITE.heroSubtitle}</p>
       </div>
 
       {/* подсказка скролла: линия с бегущей точкой */}
       <div className="absolute bottom-10 left-1/2 z-10 hidden -translate-x-1/2 md:block">
-        <div className="relative h-14 w-px bg-ink/35">
+        <div className="relative h-14 w-px bg-bone/25">
           {reduced ? (
             <span className="absolute -left-[2.5px] top-0 size-[5px] rounded-full bg-blood" />
           ) : (

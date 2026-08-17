@@ -15,9 +15,9 @@ export default function Emblem({ size = 220, className = '' }: { size?: number; 
       aria-hidden="true"
       className={className}
     >
-      <circle cx={c} cy={c} r="118" fill="var(--color-bone)" />
+      <circle cx={c} cy={c} r="118" fill="var(--color-charcoal)" />
 
-      <g stroke="var(--color-ink)" strokeWidth="0.8" opacity="0.35">
+      <g stroke="var(--color-bone)" strokeWidth="0.8" opacity="0.28">
         {RAYS.map((a, i) => (
           <line
             key={i}
@@ -29,11 +29,11 @@ export default function Emblem({ size = 220, className = '' }: { size?: number; 
         ))}
       </g>
 
-      <circle cx={c} cy={c} r="118" stroke="var(--color-ink)" strokeWidth="1.6" />
-      <circle cx={c} cy={c} r="104" stroke="var(--color-gold)" strokeWidth="1" opacity="0.8" />
-      <circle cx={c} cy={c} r="74" stroke="var(--color-ink)" strokeWidth="1.2" />
+      <circle cx={c} cy={c} r="118" stroke="var(--color-bone)" strokeWidth="1.6" opacity="0.85" />
+      <circle cx={c} cy={c} r="104" stroke="var(--color-gold)" strokeWidth="1" opacity="0.9" />
+      <circle cx={c} cy={c} r="74" stroke="var(--color-bone)" strokeWidth="1.2" opacity="0.7" />
 
-      <g stroke="var(--color-ink)" strokeWidth="1.1" opacity="0.7">
+      <g stroke="var(--color-bone)" strokeWidth="1.1" opacity="0.5">
         {TEETH.map((a, i) => (
           <line
             key={i}
@@ -48,13 +48,13 @@ export default function Emblem({ size = 220, className = '' }: { size?: number; 
       {/* ромб-сигил */}
       <path
         d={`M ${c} 52 L 180 ${c} L ${c} 188 L 60 ${c} Z`}
-        fill="var(--color-parchment)"
-        stroke="var(--color-ink)"
+        fill="var(--color-ink)"
+        stroke="var(--color-bone)"
         strokeWidth="1.4"
       />
       <circle cx={c} cy={c} r="34" stroke="var(--color-blood)" strokeWidth="1.4" />
-      <path d={`M ${c} 86 L 154 ${c + 20} H 86 Z`} stroke="var(--color-ink)" strokeWidth="1.2" />
-      <path d={`M ${c} 94 v 52 M 94 ${c} h 52`} stroke="var(--color-ink)" strokeWidth="1" opacity="0.65" />
+      <path d={`M ${c} 86 L 154 ${c + 20} H 86 Z`} stroke="var(--color-bone)" strokeWidth="1.2" opacity="0.9" />
+      <path d={`M ${c} 94 v 52 M 94 ${c} h 52`} stroke="var(--color-bone)" strokeWidth="1" opacity="0.5" />
       <circle cx={c} cy={c} r="5" fill="var(--color-blood)" />
     </svg>
   );

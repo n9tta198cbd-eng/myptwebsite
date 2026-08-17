@@ -64,7 +64,7 @@ export default function CaseModal({
             type="button"
             aria-label="Закрыть"
             onClick={onClose}
-            className="fixed inset-0 -z-10 block size-full cursor-default bg-ink/75 backdrop-blur-[2px]"
+            className="fixed inset-0 -z-10 block size-full cursor-default bg-ink/85 backdrop-blur-[2px]"
           />
 
           <motion.article
@@ -72,24 +72,24 @@ export default function CaseModal({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative my-auto w-full max-w-[880px] border border-ink bg-parchment"
+            className="relative my-auto w-full max-w-[880px] border border-gold/60 bg-charcoal"
           >
-            <Corner size={40} className="absolute top-0 left-0 z-10 text-ink" />
-            <Corner size={40} className="absolute top-0 right-0 z-10 rotate-90 text-ink" />
-            <Corner size={40} className="absolute right-0 bottom-0 z-10 rotate-180 text-ink" />
-            <Corner size={40} className="absolute bottom-0 left-0 z-10 -rotate-90 text-ink" />
+            <Corner size={40} className="absolute top-0 left-0 z-10 text-gold" />
+            <Corner size={40} className="absolute top-0 right-0 z-10 rotate-90 text-gold" />
+            <Corner size={40} className="absolute right-0 bottom-0 z-10 rotate-180 text-gold" />
+            <Corner size={40} className="absolute bottom-0 left-0 z-10 -rotate-90 text-gold" />
 
             <button
               ref={closeRef}
               type="button"
               data-cursor="link"
               onClick={onClose}
-              className="label absolute top-4 right-5 z-20 text-ink transition-colors duration-200 hover:text-blood"
+              className="label absolute top-4 right-5 z-20 text-bone/70 transition-colors duration-200 hover:text-blood"
             >
               Закрыть ✕
             </button>
 
-            <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-ink">
+            <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-gold/40">
               <Image
                 src={item.cover}
                 alt={`${item.title} — обложка кейса`}
@@ -103,11 +103,11 @@ export default function CaseModal({
             <div className="px-6 py-8 md:px-12 md:py-12">
               <span className="label text-blood">N° {item.num}</span>
               <h2 className="mt-3 font-antiqua text-4xl leading-[1.05] md:text-6xl">{item.title}</h2>
-              <p className="mt-3 font-antiqua text-xl text-ink/75 italic md:text-2xl">
+              <p className="mt-3 font-antiqua text-xl text-bone/65 italic md:text-2xl">
                 {item.subtitle}
               </p>
 
-              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-ink/25 py-5 md:grid-cols-4">
+              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-gold/30 py-5 md:grid-cols-4">
                 {[
                   ['Клиент', item.client],
                   ['Год', item.year],
@@ -115,7 +115,7 @@ export default function CaseModal({
                   ['Направление', item.category],
                 ].map(([k, v]) => (
                   <div key={k}>
-                    <dt className="label text-ink/50">{k}</dt>
+                    <dt className="label text-bone/40">{k}</dt>
                     <dd className="mt-1 text-[15px] leading-snug">{v}</dd>
                   </div>
                 ))}
@@ -127,19 +127,19 @@ export default function CaseModal({
                 {blocks.map((b) => (
                   <section key={b.title}>
                     <h3 className="label text-blood">{b.title}</h3>
-                    <p className="mt-2 max-w-[62ch] text-ink/90">{b.body}</p>
+                    <p className="mt-2 max-w-[62ch] text-bone/85">{b.body}</p>
                   </section>
                 ))}
               </div>
 
               {item.services.length > 0 && (
                 <div className="mt-10">
-                  <h3 className="label text-ink/50">Услуги</h3>
+                  <h3 className="label text-bone/40">Услуги</h3>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {item.services.map((s) => (
                       <li
                         key={s}
-                        className="border border-ink/35 px-3 py-1.5 text-[13px] text-ink/85"
+                        className="border border-gold/40 px-3 py-1.5 text-[13px] text-bone/75"
                       >
                         {s}
                       </li>

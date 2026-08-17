@@ -87,7 +87,7 @@ export default function Preloader() {
   return (
     <motion.div
       id="preloader"
-      className="fixed inset-0 z-[100] grid place-items-center bg-[#0b0906]"
+      className="fixed inset-0 z-[100] grid place-items-center bg-ink"
       initial={{ y: 0 }}
       animate={{ y: phase === 'out' ? '-100%' : 0 }}
       transition={{ duration: CURTAIN_MS / 1000, ease: [0.76, 0, 0.24, 1] }}
@@ -101,17 +101,17 @@ export default function Preloader() {
           animate={
             flashing
               ? { scale: [1, 1.18, 1], color: 'var(--color-blood)' }
-              : { scale: 1, color: 'var(--color-parchment)' }
+              : { scale: 1, color: 'var(--color-bone)' }
           }
           transition={{ duration: FLASH_MS / 1000 }}
-          className="text-parchment"
+          className="text-bone"
         >
           <div className="ring-spin">
             <Sigil size={92} strokeWidth={1} />
           </div>
         </motion.div>
 
-        <span className="label text-parchment/70 tabular-nums">
+        <span className="label text-bone/70 tabular-nums">
           {String(pct).padStart(3, '0')} %
         </span>
       </div>

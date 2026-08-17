@@ -78,7 +78,7 @@ export default function CustomCursor() {
       {/* кольцо */}
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 size-9 rounded-full border border-ink transition-[width,height,border-color,background-color] duration-200 ease-out group-data-[state=card]/cursor:size-14 group-data-[state=card]/cursor:border-blood group-data-[state=link]/cursor:size-14 group-data-[state=link]/cursor:border-blood group-data-[state=seal]/cursor:size-14 group-data-[state=seal]/cursor:border-blood group-data-[state=seal]/cursor:bg-blood/10"
+        className="fixed top-0 left-0 size-9 rounded-full border border-bone transition-[width,height,border-color,background-color] duration-200 ease-out group-data-[state=card]/cursor:size-14 group-data-[state=card]/cursor:border-blood group-data-[state=link]/cursor:size-14 group-data-[state=link]/cursor:border-blood group-data-[state=seal]/cursor:size-14 group-data-[state=seal]/cursor:border-blood group-data-[state=seal]/cursor:bg-blood/10"
       />
 
       {/* центральный слой: кинжал по умолчанию, сигил над интерактивом */}
@@ -86,8 +86,8 @@ export default function CustomCursor() {
         <span className="absolute transition-opacity duration-150 group-data-[state=card]/cursor:opacity-0 group-data-[state=link]/cursor:opacity-0 group-data-[state=seal]/cursor:opacity-0">
           <svg width="10" height="22" viewBox="0 0 10 22" fill="none" aria-hidden="true">
             <path d="M5 0 L7.4 6 V14 H2.6 V6 Z" fill="var(--color-blood)" />
-            <path d="M0.6 14.6h8.8" stroke="var(--color-ink)" strokeWidth="1.4" />
-            <path d="M5 15v6.4" stroke="var(--color-ink)" strokeWidth="1.4" />
+            <path d="M0.6 14.6h8.8" stroke="var(--color-bone)" strokeWidth="1.4" />
+            <path d="M5 15v6.4" stroke="var(--color-bone)" strokeWidth="1.4" />
           </svg>
         </span>
 

@@ -1,9 +1,10 @@
-/* Зерно на весь сайт: SVG feTurbulence, opacity 0.06, multiply.
+/* Зерно на весь сайт: SVG feTurbulence, opacity 0.05, screen.
+   На тёмном фоне multiply не даёт ничего — зерно должно осветлять.
    Сдвиг кадров ~8 fps даёт эффект старой плёнки (см. globals.css). */
 export default function GrainOverlay() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-40 overflow-hidden opacity-[0.06] mix-blend-multiply"
+      className="pointer-events-none fixed inset-0 z-40 overflow-hidden opacity-[0.05] mix-blend-screen"
       aria-hidden="true"
     >
       <svg className="grain-layer absolute -inset-[6%] h-[112%] w-[112%]">

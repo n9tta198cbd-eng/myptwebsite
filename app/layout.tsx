@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <a
           href="#works"
-          className="label sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[110] focus:border focus:border-ink focus:bg-parchment focus:px-4 focus:py-2"
+          className="label sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[110] focus:border focus:border-gold focus:bg-charcoal focus:px-4 focus:py-2"
         >
           К работам
         </a>

@@ -23,7 +23,7 @@ export default function SealButton({
         aria-label={label}
         title={label}
         style={{ width: size, height: size }}
-        className="group relative grid place-items-center rounded-full bg-blood text-parchment shadow-[inset_0_2px_3px_rgba(255,255,255,0.28),inset_0_-3px_5px_rgba(0,0,0,0.42),0_3px_10px_rgba(22,19,14,0.35)] transition-transform duration-300 hover:scale-[1.06]"
+        className="group relative grid place-items-center rounded-full bg-blood text-bone shadow-[inset_0_2px_3px_rgba(255,255,255,0.28),inset_0_-3px_5px_rgba(0,0,0,0.42),0_3px_10px_rgba(22,19,14,0.35)] transition-transform duration-300 hover:scale-[1.06]"
       >
         {/* рельефный оттиск */}
         <svg

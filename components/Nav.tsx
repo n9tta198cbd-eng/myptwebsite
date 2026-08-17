@@ -39,7 +39,9 @@ export default function Nav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-30 transition-colors duration-500 ${
-        scrolled ? 'bg-parchment/95 backdrop-blur-[2px]' : 'bg-transparent'
+        scrolled
+          ? 'border-b border-gold/25 bg-ink/80 backdrop-blur-[10px]'
+          : 'border-b border-transparent bg-transparent'
       }`}
     >
       <nav className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-5 py-4 md:px-10">
@@ -60,7 +62,7 @@ export default function Nav() {
                   href={l.href}
                   onClick={(e) => go(e, l.href)}
                   data-cursor="link"
-                  className="label relative block py-1 text-ink transition-colors duration-200 hover:text-blood"
+                  className="label relative block py-1 text-bone/70 transition-colors duration-200 hover:text-bone"
                 >
                   {l.label}
                 </a>
@@ -78,7 +80,7 @@ export default function Nav() {
           scrolled ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <svg viewBox="0 0 1200 8" className="h-2 w-full text-ink" fill="none" aria-hidden="true">
+        <svg viewBox="0 0 1200 8" className="h-2 w-full text-gold" fill="none" aria-hidden="true">
           <path d="M0 4h520" stroke="currentColor" strokeWidth="1" opacity="0.5" />
           <path d="M680 4h520" stroke="currentColor" strokeWidth="1" opacity="0.5" />
           <path d="M540 4l8-3 8 3-8 3-8-3Z" stroke="var(--color-gold)" strokeWidth="1" />

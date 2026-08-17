@@ -6,7 +6,7 @@ export default function Divider({ className = '' }: { className?: string }) {
       viewBox="0 0 600 40"
       fill="none"
       aria-hidden="true"
-      className={`h-8 w-full max-w-[600px] text-ink ${className}`}
+      className={`h-8 w-full max-w-[600px] text-gold ${className}`}
       preserveAspectRatio="xMidYMid meet"
     >
       <g
