@@ -6,6 +6,7 @@ import CustomCursor from '@/components/ui/CustomCursor';
 import Footer from '@/components/Footer';
 import GrainOverlay from '@/components/ui/GrainOverlay';
 import Nav from '@/components/Nav';
+import PageBackdrop from '@/components/ui/PageBackdrop';
 import Preloader from '@/components/Preloader';
 import SmoothScroll from '@/components/SmoothScroll';
 import { SITE } from '@/lib/site';
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           К работам
         </a>
 
+        <PageBackdrop />
         <Preloader />
         <SmoothScroll />
         <GrainOverlay />
