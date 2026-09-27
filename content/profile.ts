@@ -22,14 +22,34 @@ export const LINKS = {
   email: `mailto:${PROFILE.email}`,
 } as const;
 
+/* С кем работал. На сайте появляются только имена с cleared: true —
+   после того как проверены разрешения, NDA и формулировка твоей роли.
+   Отзывы и скриншоты — тоже только реальные и с согласия на публикацию. */
+export const CLIENTS: { name: string; cleared: boolean }[] = [
+  { name: 'Elysium Studio', cleared: true }, // твоя текущая роль
+  { name: '32inches', cleared: true }, // твоя текущая роль
+  { name: 'Сколково', cleared: false },
+  { name: 'Mellstroy', cleared: false },
+  { name: 'Gazgolder', cleared: false },
+  { name: 'Три дня дождя', cleared: false },
+  { name: 'Toxi$', cleared: false },
+  { name: 'Глеб Костин', cleared: false },
+];
+
+/** Имена для блока proof: только проверенные клиенты плюс описания без имён. */
+export const publicClients = (...extra: string[]) => [
+  ...CLIENTS.filter((c) => c.cleared).map((c) => c.name),
+  ...extra,
+];
+
 /* Блок «Кто я» на каждом языке. Страница может взять его целиком
    или переопределить отдельные поля: { ...PERSONA.ru, heading: 'Почему я' }. */
 export const PERSONA: Record<Lang, PersonaBlock> = {
   ru: {
     type: 'persona',
     nav: 'About',
-    heading: 'Кто за этим стоит',
-    lead: 'Матвей Новик. Арт-директор с гуманитарной базой — социология и обществоведение. Меня интересует сторона дизайна, где визуал становится инструментом влияния на мнение, эмоции, ценности и восприятие реальности.',
+    heading: 'Кто стоит за N9TTA',
+    lead: 'N9TTA — визуальный мир. За ним стоит Матвей Новик, арт-директор с гуманитарной базой: социология и обществоведение. Меня интересует сторона дизайна, где визуал становится инструментом влияния на мнение, эмоции, ценности и восприятие реальности.',
     paragraphs: [
       'Пять лет в креативной индустрии: стритвир-сцена Беларуси, крупные стримеры, музыкальные проекты, бренды. Работа начинается с глубокого ресерча — контекст, архивы, культурные слои и скрытая логика проекта. Только потом форма.',
       'Сейчас арт-директор Elysium Studio и бренда 32inches. Параллельно строю собственные AI-пайплайны: если рутину можно автоматизировать, я её автоматизирую.',
@@ -55,8 +75,8 @@ export const PERSONA: Record<Lang, PersonaBlock> = {
   en: {
     type: 'persona',
     nav: 'About',
-    heading: 'Who is behind this',
-    lead: 'Matvey Novik. An art director trained in sociology. I care about the side of design where visuals shape opinion, emotion, values and the way people read reality.',
+    heading: 'Who is behind N9TTA',
+    lead: 'N9TTA is a visual world. Behind it is Matvey Novik, an art director trained in sociology. I care about the side of design where visuals shape opinion, emotion, values and the way people read reality.',
     paragraphs: [
       'Five years in the creative industry: the Belarusian streetwear scene, major streamers, music projects, brands. Every project starts with deep research into context, archives and cultural layers. Form comes after.',
       'Currently art director of Elysium Studio and the 32inches brand. I also build my own AI pipelines: if routine can be automated, I automate it.',
