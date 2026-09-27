@@ -3,41 +3,27 @@
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
-import Corner from './ornaments/Corner';
 import type { Case } from '@/content/cases';
 import { useUI } from './page/PageContext';
 
-/* Модалка кейса: полный текст, перенесённый со старого сайта.
-   Esc и клик по фону закрывают, скролл страницы блокируется. */
-export default function CaseModal({
-  item,
-  onClose,
-}: {
-  item: Case | null;
-  onClose: () => void;
-}) {
+/* Кейс целиком. Esc и клик по фону закрывают, скролл страницы блокируется. */
+export default function CaseModal({ item, onClose }: { item: Case | null; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const ui = useUI();
 
   useEffect(() => {
     if (!item) return;
-
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKey);
-
-    window.__lenis?.stop();
     const html = document.documentElement;
-    const prevOverflow = html.style.overflow;
+    const prev = html.style.overflow;
     html.style.overflow = 'hidden';
-
     closeRef.current?.focus();
-
     return () => {
       document.removeEventListener('keydown', onKey);
-      window.__lenis?.start();
-      html.style.overflow = prevOverflow;
+      html.style.overflow = prev;
     };
   }, [item, onClose]);
 
@@ -53,104 +39,74 @@ export default function CaseModal({
     <AnimatePresence>
       {item && (
         <motion.div
-          className="fixed inset-0 z-[90] flex items-start justify-center overflow-y-auto overscroll-contain p-4 md:p-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          className="fixed inset-0 z-[90] overflow-y-auto overscroll-contain bg-paper"
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          exit={{ y: '100%' }}
+          transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
           role="dialog"
           aria-modal="true"
           aria-label={item.title}
         >
           <button
+            ref={closeRef}
             type="button"
-            aria-label={ui.close}
             onClick={onClose}
-            className="fixed inset-0 -z-10 block size-full cursor-default bg-ink/85 backdrop-blur-[2px]"
-          />
-
-          <motion.article
-            initial={{ y: 28, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative my-auto w-full max-w-[880px] border border-gold/60 bg-charcoal"
+            className="label fixed top-4 right-4 z-10 bg-ink px-4 py-2 text-paper hover:bg-signal md:right-8"
           >
-            <Corner size={40} className="absolute top-0 left-0 z-10 text-gold" />
-            <Corner size={40} className="absolute top-0 right-0 z-10 rotate-90 text-gold" />
-            <Corner size={40} className="absolute right-0 bottom-0 z-10 rotate-180 text-gold" />
-            <Corner size={40} className="absolute bottom-0 left-0 z-10 -rotate-90 text-gold" />
+            {ui.close} ✕
+          </button>
 
-            <button
-              ref={closeRef}
-              type="button"
-              data-cursor="link"
-              onClick={onClose}
-              className="label absolute top-4 right-5 z-20 text-bone/70 transition-colors duration-200 hover:text-blood"
-            >
-              {ui.close} ✕
-            </button>
+          <article className="px-4 pt-20 pb-20 md:px-8">
+            <p className="label text-signal">N° {item.num} — {item.category}</p>
+            <h2 className="display mt-4 text-giant">{item.title}</h2>
+            <p className="mt-4 max-w-[40ch] text-2xl italic md:ml-[25%]">{item.subtitle}</p>
 
-            <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-gold/40">
+            <div className="relative mt-12 aspect-[16/9] w-full border-2 border-ink md:w-[75%]">
               <Image
                 src={item.cover}
                 alt={`${item.title} — ${ui.cover}`}
                 fill
                 unoptimized={item.cover.endsWith('.svg')}
-                sizes="(max-width: 880px) 100vw, 880px"
+                sizes="(max-width: 767px) 100vw, 75vw"
                 className="object-cover"
               />
             </div>
 
-            <div className="px-6 py-8 md:px-12 md:py-12">
-              <span className="label text-blood">N° {item.num}</span>
-              <h2 className="mt-3 font-antiqua text-4xl leading-[1.05] md:text-6xl">{item.title}</h2>
-              <p className="mt-3 font-antiqua text-xl text-bone/65 italic md:text-2xl">
-                {item.subtitle}
-              </p>
-
-              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-gold/30 py-5 md:grid-cols-4">
+            <div className="mt-12 grid gap-10 md:grid-cols-12">
+              <dl className="grid grid-cols-2 gap-4 self-start md:col-span-3 md:grid-cols-1">
                 {[
                   [ui.client, item.client],
                   [ui.year, item.year],
                   [ui.role, item.role],
-                  [ui.category, item.category],
                 ].map(([k, v]) => (
-                  <div key={k}>
-                    <dt className="label text-bone/40">{k}</dt>
-                    <dd className="mt-1 text-[15px] leading-snug">{v}</dd>
+                  <div key={k} className="border-t-2 border-ink pt-2">
+                    <dt className="label text-ash">{k}</dt>
+                    <dd className="mt-1 leading-snug">{v}</dd>
                   </div>
                 ))}
               </dl>
 
-              <p className="mt-8 font-antiqua text-2xl leading-snug md:text-[28px]">{item.summary}</p>
-
-              <div className="mt-10 space-y-8">
+              <div className="md:col-span-8 md:col-start-5">
+                <p className="text-2xl leading-snug md:text-3xl">{item.summary}</p>
                 {blocks.map((b) => (
-                  <section key={b.title}>
-                    <h3 className="label text-blood">{b.title}</h3>
-                    <p className="mt-2 max-w-[62ch] text-bone/85">{b.body}</p>
+                  <section key={b.title} className="mt-10">
+                    <h3 className="label text-signal">{b.title}</h3>
+                    <p className="mt-2 text-lg">{b.body}</p>
                   </section>
                 ))}
-              </div>
-
-              {item.services.length > 0 && (
-                <div className="mt-10">
-                  <h3 className="label text-bone/40">{ui.services}</h3>
-                  <ul className="mt-3 flex flex-wrap gap-2">
+                {item.services.length > 0 && (
+                  <ul className="mt-10 flex flex-wrap gap-2">
                     {item.services.map((s) => (
-                      <li
-                        key={s}
-                        className="border border-gold/40 px-3 py-1.5 text-[13px] text-bone/75"
-                      >
+                      <li key={s} className="label border-2 border-ink px-3 py-1.5">
                         {s}
                       </li>
                     ))}
                   </ul>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </motion.article>
+          </article>
         </motion.div>
       )}
     </AnimatePresence>

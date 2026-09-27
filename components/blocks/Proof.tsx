@@ -1,28 +1,30 @@
 import type { ProofBlock } from '@/content/types';
+import { glyphAt } from '../ui/glyphs';
 import Section from './Section';
+import type { BlockProps } from './props';
 
-/* Доказательства: имена, с кем работал, и слова людей. */
-export default function Proof({ block, id, label }: { block: ProofBlock; id: string; label: string }) {
+/* Имена сплошным набором через символы и цитаты. */
+export default function Proof({ block, id, label, index }: BlockProps<ProofBlock>) {
   return (
-    <Section id={id} label={label} heading={block.heading}>
+    <Section id={id} index={index} label={label} heading={block.heading}>
       {block.names && (
-        <ul className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-center gap-x-8 gap-y-4">
+        <p className="display text-3xl leading-[1.15] md:text-5xl">
           {block.names.map((name, i) => (
-            <li key={name} className="flex items-center gap-8 font-antiqua text-2xl text-bone/80 md:text-3xl">
-              {i > 0 && <span aria-hidden="true" className="text-base text-gold">✦</span>}
+            <span key={name}>
+              {i > 0 && <span className="mx-3 font-mono text-signal">{glyphAt(i * 5)}</span>}
               {name}
-            </li>
+            </span>
           ))}
-        </ul>
+        </p>
       )}
       {block.quotes && (
-        <ul className="mx-auto mt-14 grid max-w-[1200px] gap-6 md:grid-cols-2">
+        <ul className="mt-14 grid gap-10 md:grid-cols-2">
           {block.quotes.map((q) => (
-            <li key={q.name} className="border-l-2 border-blood pl-6">
-              <blockquote className="font-antiqua text-2xl leading-snug italic">«{q.text}»</blockquote>
-              <p className="label mt-4 text-bone/55">
+            <li key={q.name} className="border-l-4 border-signal pl-5">
+              <blockquote className="text-2xl leading-snug italic">«{q.text}»</blockquote>
+              <p className="label mt-4">
                 {q.name}
-                {q.role && <span className="text-bone/35"> — {q.role}</span>}
+                {q.role && <span className="text-ash"> — {q.role}</span>}
               </p>
             </li>
           ))}

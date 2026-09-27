@@ -1,13 +1,7 @@
 import type { Link } from '@/content/types';
 
-/* Ряд кнопок-ссылок. Первая — залитая (главное действие), остальные — контурные. */
-export default function Actions({
-  items,
-  className = '',
-}: {
-  items?: Link[];
-  className?: string;
-}) {
+/* Ряд кнопок-ссылок. Первая — залитая сигнальным, остальные — контурные. */
+export default function Actions({ items, className = '' }: { items?: Link[]; className?: string }) {
   if (!items?.length) return null;
 
   return (
@@ -18,16 +12,15 @@ export default function Actions({
           <a
             key={a.href + a.label}
             href={a.href}
-            data-cursor="link"
             target={external ? '_blank' : undefined}
             rel={external ? 'noreferrer' : undefined}
-            className={`border px-5 py-3 font-mono text-[11.5px] tracking-[0.16em] uppercase transition-colors duration-200 ${
+            className={`label border-2 px-5 py-3 transition-colors duration-200 ${
               i === 0
-                ? 'border-blood bg-blood text-bone hover:bg-transparent'
-                : 'border-gold/70 text-bone hover:border-blood hover:bg-blood'
+                ? 'border-signal bg-signal text-paper hover:border-ink hover:bg-ink'
+                : 'border-ink hover:bg-ink hover:text-paper'
             }`}
           >
-            {a.label}
+            {a.label} {i === 0 && '→'}
           </a>
         );
       })}

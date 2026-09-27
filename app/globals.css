@@ -1,131 +1,103 @@
 @import "tailwindcss";
 
-/* ---------- Дизайн-токены: gothic occult revival ---------- */
+/* ---------- Дизайн-токены: самиздат / типографический максимализм ----------
+   Бумага, чёрная краска и один сигнальный цвет. Всё остальное делает шрифт. */
 
 @theme {
-  --color-ink: #0d0d0d; /* фон страницы */
-  --color-charcoal: #1a1a1a; /* приподнятые поверхности: карточки, модалка */
-  --color-bone: #e8e2d0; /* текст, линии, гравюры */
-  --color-blood: #a32626; /* акценты, hover, печати */
-  --color-gold: #8a7440; /* тонкие орнаменты, рамки */
+  --color-paper: #ece8df; /* фон — газетная бумага */
+  --color-ink: #121110; /* текст, линии, заливки */
+  --color-signal: #e0321c; /* единственный акцент: выделение, символы, ссылки */
+  --color-ash: #6d6961; /* вторичный текст, подписи */
+  --color-line: #121110; /* разделители — той же краской, что текст */
 
-  /* Pirata One — только латиница (кириллицы в шрифте нет).
-     Русские заголовки набираются антиквой Cormorant. */
-  --font-blackletter: var(--font-pirata), "Times New Roman", serif;
-  --font-antiqua: var(--font-cormorant), Georgia, serif;
-  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  /* Dela Gothic One — плакатный гротеск с кириллицей: заголовки и крупный набор.
+     Spectral — книжная антиква: тексты и цитаты.
+     IBM Plex Mono — маргиналии, подписи, нумерация, символы. */
+  --font-display: var(--font-dela), "Arial Black", sans-serif;
+  --font-serif: var(--font-spectral), Georgia, serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
-  --text-hero: clamp(3.1rem, 13.2vw, 11rem);
-  --text-section: clamp(2.5rem, 7vw, 6rem);
-  --text-wordmark: clamp(2.4rem, 11.5vw, 9rem);
+  --text-mega: clamp(4.2rem, 17vw, 17rem);
+  --text-giant: clamp(2rem, 6.6vw, 7rem);
+  --text-big: clamp(1.9rem, 4.6vw, 4.2rem);
 }
-
-/* ---------- База ---------- */
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: auto;
   }
 
   body {
-    /* якорь для рамки: она absolute inset-0 и должна тянуться
-       на всю высоту документа, а не окна */
-    position: relative;
-    background-color: var(--color-ink);
-    color: var(--color-bone);
-    font-family: var(--font-sans);
-    font-size: 17px;
-    line-height: 1.65;
-    font-weight: 300;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
 
   ::selection {
-    background-color: var(--color-blood);
-    color: var(--color-bone);
+    background-color: var(--color-signal);
+    color: var(--color-paper);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-blood);
+    outline: 2px solid var(--color-signal);
     outline-offset: 3px;
   }
 
   h1,
   h2,
   h3 {
-    text-wrap: balance;
     font-weight: 400;
   }
 
-  /* Нативный курсор скрывается только когда работает кастомный */
-  @media (pointer: fine) {
-    body[data-cursor-active="true"],
-    body[data-cursor-active="true"] * {
-      cursor: none;
-    }
+  /* одноколоночная сетка на телефоне не должна раздуваться по длинному слову */
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* ---------- Утилиты ---------- */
-
+/* Маргиналия: моноширинная подпись капсом. */
 @utility label {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
 }
 
-/* Обе грани карточки при флипе */
-@utility face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+/* Плакатный набор: плотный интерлиньяж, без переносов по слогам. */
+@utility display {
+  font-family: var(--font-display);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: manual;
 }
 
-@utility preserve-3d {
-  transform-style: preserve-3d;
-}
-
-/* ---------- Зерно ----------
-   На тёмном фоне multiply не даёт ничего — зерно должно осветлять,
-   поэтому screen. */
-
-@keyframes grain-shift {
-  0% {
-    transform: translate(0, 0);
-  }
-  25% {
-    transform: translate(-3%, 2%);
-  }
-  50% {
-    transform: translate(2%, -3%);
-  }
-  75% {
-    transform: translate(-2%, -2%);
-  }
-  100% {
-    transform: translate(3%, 1%);
+/* Ссылка с подчёркиванием, которое заливается сигнальным цветом. */
+@utility ink-link {
+  background-image: linear-gradient(var(--color-signal), var(--color-signal));
+  background-size: 100% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition:
+    background-size 0.25s ease,
+    color 0.25s ease;
+  &:hover {
+    background-size: 100% 100%;
+    color: var(--color-paper);
   }
 }
 
-.grain-layer {
-  animation: grain-shift 1s steps(8) infinite;
-}
+/* ---------- Лента символов ---------- */
 
-@media (prefers-reduced-motion: reduce) {
-  .grain-layer {
-    animation: none;
-  }
-}
-
-/* ---------- Бегущая строка ---------- */
-
-@keyframes marquee-slide {
+@keyframes ribbon {
   from {
     transform: translate3d(0, 0, 0);
   }
@@ -134,40 +106,18 @@
   }
 }
 
-.marquee-track {
-  animation: marquee-slide var(--marquee-duration, 28s) linear infinite;
-  animation-play-state: running;
-  will-change: transform;
+.ribbon-track {
+  animation: ribbon var(--ribbon-duration, 40s) linear infinite;
 }
-
-/* ---------- Кольцо текста в hero ---------- */
-
-@keyframes ring-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.ring-spin {
-  animation: ring-spin 20s linear infinite;
-  transform-origin: 50% 50%;
-}
-
-/* ---------- Reduced motion: оставляем только простые fade ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track,
-  .ring-spin {
-    animation: none !important;
+  .ribbon-track {
+    animation: none;
   }
 
   *,
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
   }
 }

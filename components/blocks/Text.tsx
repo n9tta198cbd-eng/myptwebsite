@@ -1,11 +1,12 @@
 import type { TextBlock } from '@/content/types';
 import Section from './Section';
+import type { BlockProps } from './props';
 
-/* Свободный текст — для всего, что не укладывается в другие блоки. */
-export default function Text({ block, id, label }: { block: TextBlock; id: string; label: string }) {
+/* Свободный текст. */
+export default function Text({ block, id, label, index }: BlockProps<TextBlock>) {
   return (
-    <Section id={id} label={label} heading={block.heading}>
-      <div className="mx-auto max-w-[62ch] space-y-5 text-bone/85">
+    <Section id={id} index={index} label={label} heading={block.heading}>
+      <div className="max-w-[60ch] space-y-5 text-lg">
         {block.paragraphs.map((p) => (
           <p key={p.slice(0, 32)}>{p}</p>
         ))}

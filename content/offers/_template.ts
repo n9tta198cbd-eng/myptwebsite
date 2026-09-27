@@ -1,7 +1,7 @@
 import { LINKS, PERSONA } from '../profile';
 import { definePage } from '../types';
 
-/* ШАБЛОН коммерческой страницы. Здесь есть все 15 блоков — копируй файл,
+/* ШАБЛОН коммерческой страницы. Здесь есть все 16 блоков — копируй файл,
    удаляй лишнее, переставляй остальное. Живой просмотр при `npm run dev`:
    http://localhost:3000/for/_template
 
@@ -18,8 +18,15 @@ export default definePage({
 
   sections: [
     {
+      type: 'intro', // знакомство — первый экран главной
+      title: 'N9TTA',
+      name: 'Имя — роль — город',
+      lead: 'Одна мысль о себе.',
+      text: ['Абзац.'],
+      facts: [{ k: 'Факт', v: 'Значение' }],
+    },
+    {
       type: 'hero',
-      variant: 'statement', // или 'emblem' — печать с кольцом и вордмарком
       eyebrow: 'Для кого страница',
       title: 'Главная фраза словами заказчика',
       lead: 'Одно предложение: что он получит, работая с тобой.',
@@ -37,7 +44,8 @@ export default definePage({
     {
       type: 'manifesto',
       heading: 'Манифест',
-      lines: ['Убеждение, с которым можно спорить.', 'Ещё одно.'],
+      statement: 'Главная фраза огромным кеглем',
+      lines: ['Тезис строкой.', { title: 'Или с заголовком', text: 'И пояснением.' }],
       signature: '— Подпись',
     },
     {
@@ -47,10 +55,14 @@ export default definePage({
       tags: ['branding'], // или cases: ['case-gazgolder', ...] — точный список и порядок
     },
     {
-      type: 'exchange',
-      heading: 'Обмен',
-      give: { title: 'Даю', items: ['Пункт'] },
-      seek: { title: 'Ищу', items: ['Пункт'] },
+      type: 'collab',
+      heading: 'Коллаборация',
+      why: ['Зачем делать вместе.'],
+      sides: [
+        { title: 'Тебе', items: ['Пункт'] },
+        { title: 'Мне', items: ['Пункт'] },
+      ],
+      terms: { title: 'Условия', items: ['Пункт'] },
     },
     {
       type: 'ideas',

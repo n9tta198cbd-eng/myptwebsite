@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState, type ElementType } from 'react';
 import { useRichInteractions } from '@/lib/motion';
 
-const GLYPHS = ['☿', '♄', '♆', '⚚', 'ᚠ', 'ᚱ', '☾', '⚸', 'ᚦ', '♃', '⧉', 'ᛉ'];
+import { GLYPHS } from './glyphs';
 const DURATION = 600;
 
-/* Заголовок «собирается» из рун и алхимических знаков при входе во вьюпорт.
+/* Заголовок «собирается» из типографских символов при входе во вьюпорт.
    Срабатывает один раз. При reduced motion и на мобильных сразу финальный текст. */
 export default function ScrambleHeading({
   text,

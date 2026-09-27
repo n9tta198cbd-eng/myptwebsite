@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Cta from '../blocks/Cta';
-import Exchange from '../blocks/Exchange';
+import Collab from '../blocks/Collab';
+import Intro from '../blocks/Intro';
 import Faq from '../blocks/Faq';
 import Hero from '../blocks/Hero';
 import Ideas from '../blocks/Ideas';
@@ -22,28 +23,30 @@ import { LINKS } from '@/content/profile';
 import type { Block, Page } from '@/content/types';
 import { UI_STRINGS } from '@/content/ui';
 
-type Ctx = { id: string; label: string; page: Page };
+type Ctx = { id: string; label: string; index: number; page: Page };
+
+/* в компоненты уходит только то, что им нужно, — без всего конфига страницы */
+const p = ({ id, label, index }: Ctx) => ({ id, label, index });
 
 /* Реестр: тип блока → компонент. Новый блок = тип в content/types.ts,
    компонент в components/blocks и одна строка здесь. */
 const REGISTRY: { [T in Block['type']]: (b: Extract<Block, { type: T }>, c: Ctx) => ReactNode } = {
-  hero: (b, c) => <Hero block={b} id={c.id} />,
+  intro: (b, c) => <Intro block={b} {...p(c)} />,
+  hero: (b, c) => <Hero block={b} {...p(c)} />,
   marquee: (b) => <Marquee block={b} />,
-  manifesto: (b, c) => <Manifesto block={b} id={c.id} label={c.label} />,
-  works: (b, c) => (
-    <Works block={b} id={c.id} label={c.label} cases={pickCases(c.page.lang, b.cases, b.tags)} />
-  ),
-  persona: (b, c) => <Persona block={b} id={c.id} label={c.label} />,
-  exchange: (b, c) => <Exchange block={b} id={c.id} label={c.label} />,
-  ideas: (b, c) => <Ideas block={b} id={c.id} label={c.label} />,
-  pain: (b, c) => <Pain block={b} id={c.id} label={c.label} />,
-  services: (b, c) => <Services block={b} id={c.id} label={c.label} />,
-  process: (b, c) => <Process block={b} id={c.id} label={c.label} />,
-  proof: (b, c) => <Proof block={b} id={c.id} label={c.label} />,
-  stats: (b, c) => <Stats block={b} id={c.id} />,
-  faq: (b, c) => <Faq block={b} id={c.id} label={c.label} />,
-  cta: (b, c) => <Cta block={b} id={c.id} label={c.label} />,
-  text: (b, c) => <Text block={b} id={c.id} label={c.label} />,
+  manifesto: (b, c) => <Manifesto block={b} {...p(c)} />,
+  collab: (b, c) => <Collab block={b} {...p(c)} />,
+  works: (b, c) => <Works block={b} {...p(c)} cases={pickCases(c.page.lang, b.cases, b.tags)} />,
+  persona: (b, c) => <Persona block={b} {...p(c)} />,
+  ideas: (b, c) => <Ideas block={b} {...p(c)} />,
+  pain: (b, c) => <Pain block={b} {...p(c)} />,
+  services: (b, c) => <Services block={b} {...p(c)} />,
+  process: (b, c) => <Process block={b} {...p(c)} />,
+  proof: (b, c) => <Proof block={b} {...p(c)} />,
+  stats: (b, c) => <Stats block={b} {...p(c)} />,
+  faq: (b, c) => <Faq block={b} {...p(c)} />,
+  cta: (b, c) => <Cta block={b} {...p(c)} />,
+  text: (b, c) => <Text block={b} {...p(c)} />,
 };
 
 function renderBlock(block: Block, ctx: Ctx) {
@@ -61,7 +64,7 @@ export default function PageRenderer({ page }: { page: Page }) {
   const primary = page.contact.primary ?? { label: ui.write, href: LINKS.telegram };
 
   // сквозная нумерация «N° 01…» только по блокам с заголовком
-  const UNNUMBERED: Block['type'][] = ['hero', 'marquee', 'stats'];
+  const UNNUMBERED: Block['type'][] = ['intro', 'hero', 'marquee', 'stats'];
   const labels = blocks.map(
     (b, i) =>
       b.label ??
@@ -73,7 +76,7 @@ export default function PageRenderer({ page }: { page: Page }) {
       <div lang={page.lang}>
         <a
           href="#content"
-          className="label sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[110] focus:border focus:border-gold focus:bg-charcoal focus:px-4 focus:py-2"
+          className="label sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[110] focus:bg-ink focus:text-paper focus:px-4 focus:py-2"
         >
           {ui.skip}
         </a>
@@ -84,7 +87,7 @@ export default function PageRenderer({ page }: { page: Page }) {
           {blocks.map((block, i) => {
             return (
               <div key={`${block.type}-${i}`} id={i === 1 ? 'content' : undefined} data-block={block.type}>
-                {renderBlock(block, { id: idOf(block), label: labels[i], page })}
+                {renderBlock(block, { id: idOf(block), label: labels[i], index: i, page })}
               </div>
             );
           })}

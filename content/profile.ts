@@ -13,7 +13,7 @@ export const PROFILE = {
   telegram: '@n9tta',
   telegramUrl: 'https://t.me/n9tta',
   location: { ru: 'Санкт-Петербург / удалённо', en: 'Saint Petersburg / remote' } satisfies Record<Lang, string>,
-  footerNote: 'MADE WITH INK & BLOOD',
+  footerNote: 'САМИЗДАТ',
   year: '2026',
 } as const;
 
@@ -55,11 +55,8 @@ export const PERSONA: Record<Lang, PersonaBlock> = {
       'Сейчас арт-директор Elysium Studio и бренда 32inches. Параллельно строю собственные AI-пайплайны: если рутину можно автоматизировать, я её автоматизирую.',
       '[впиши] Личное: откуда ты, что тебя сформировало, почему именно эта эстетика. Две-три фразы о человеке, а не о специалисте.',
     ],
-    portrait: {
-      src: '/assets/portrait.svg',
-      alt: 'Портрет',
-      caption: 'Портрет — процедурная гравюра, заменяется на финальный снимок',
-    },
+    // портрет: положи фото в public/assets и раскомментируй
+    // portrait: { src: '/assets/portrait.jpg', alt: 'Матвей Новик' },
     facts: [
       { k: 'Одержим', v: 'Спекулятивные и эзотерические концепции, механизмы убеждения, когнитивная нейронаука' },
       { k: 'Метод', v: 'Ресерч до дна: история дизайна иконок с 1980 года, архив Valve ради одного маскота' },
@@ -81,7 +78,6 @@ export const PERSONA: Record<Lang, PersonaBlock> = {
       'Five years in the creative industry: the Belarusian streetwear scene, major streamers, music projects, brands. Every project starts with deep research into context, archives and cultural layers. Form comes after.',
       'Currently art director of Elysium Studio and the 32inches brand. I also build my own AI pipelines: if routine can be automated, I automate it.',
     ],
-    portrait: { src: '/assets/portrait.svg', alt: 'Portrait' },
     facts: [
       { k: 'Obsessed with', v: 'Speculative and esoteric concepts, persuasion, cognitive neuroscience' },
       { k: 'Method', v: 'Research to the bottom: the full history of icon design since 1980, the Valve archive for a single mascot' },

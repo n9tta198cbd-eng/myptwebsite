@@ -3,44 +3,36 @@
 import type { ServicesBlock } from '@/content/types';
 import { useUI } from '../page/PageContext';
 import Section from './Section';
+import type { BlockProps } from './props';
 
-/* Услуги-пакеты: что получаешь, сколько стоит, сколько длится. */
-export default function Services({
-  block,
-  id,
-  label,
-}: {
-  block: ServicesBlock;
-  id: string;
-  label: string;
-}) {
+/* Форматы работы. Первый — флагман: чёрная плашка на всю ширину, остальные — колонками. */
+export default function Services({ block, id, label, index }: BlockProps<ServicesBlock>) {
   const ui = useUI();
 
   return (
-    <Section id={id} label={label} heading={block.heading} lead={block.lead}>
-      <ul className="mx-auto grid max-w-[1200px] gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {block.items.map((item) => (
-          <li key={item.title} className="flex flex-col border border-gold/50 bg-charcoal/70 p-6 md:p-8">
-            <h3 className="font-antiqua text-3xl leading-[1.05]">{item.title}</h3>
-            <p className="mt-4 text-bone/80">{item.text}</p>
+    <Section id={id} index={index} label={label} heading={block.heading} lead={block.lead}>
+      <ul className="grid gap-6 md:grid-cols-2">
+        {block.items.map((item, i) => (
+          <li
+            key={item.title}
+            className={`flex flex-col border-2 border-ink p-6 md:p-8 ${i === 0 ? 'bg-ink text-paper md:col-span-2' : ''}`}
+          >
+            <h3 className={`display ${i === 0 ? 'text-3xl md:text-6xl' : 'text-2xl md:text-3xl'}`}>{item.title}</h3>
+            <p className="mt-4 max-w-[48ch] text-lg">{item.text}</p>
             {item.includes && (
-              <>
-                <h4 className="label mt-6 text-bone/40">{ui.includes}</h4>
-                <ul className="mt-3 flex-1 space-y-1.5 text-[15px] text-bone/80">
-                  {item.includes.map((inc) => (
-                    <li key={inc}>
-                      <span className="text-gold">✦ </span>
-                      {inc}
-                    </li>
-                  ))}
-                </ul>
-              </>
+              <ul className="label mt-6 flex flex-1 flex-wrap content-start gap-2">
+                {item.includes.map((inc) => (
+                  <li key={inc} className={`border px-2 py-1 ${i === 0 ? 'border-paper/60' : 'border-ink'}`}>
+                    {inc}
+                  </li>
+                ))}
+              </ul>
             )}
             {(item.price || item.term) && (
-              <div className="mt-8 flex items-end justify-between gap-4 border-t border-gold/30 pt-4">
-                {item.price && <span className="font-mono text-xl">{item.price}</span>}
+              <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4 border-t-2 border-current pt-4">
+                {item.price && <span className="display text-2xl">{item.price}</span>}
                 {item.term && (
-                  <span className="label text-bone/50">
+                  <span className="label">
                     {ui.term}: {item.term}
                   </span>
                 )}
@@ -49,9 +41,7 @@ export default function Services({
           </li>
         ))}
       </ul>
-      {block.note && (
-        <p className="mx-auto mt-10 max-w-[62ch] text-center text-[15px] text-bone/55">{block.note}</p>
-      )}
+      {block.note && <p className="label mt-8 max-w-[60ch] text-ash">{block.note}</p>}
     </Section>
   );
 }

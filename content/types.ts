@@ -17,27 +17,37 @@ type Base = {
   hidden?: boolean;
 };
 
-/** Первый экран. emblem — печать с кольцом и именем; statement — крупная фраза. */
-export type HeroBlock = Base & {
-  type: 'hero';
-  variant?: 'emblem' | 'statement';
-  /** Для emblem — имя блэклеттером (только латиница!). Для statement — главная фраза. */
+/** Знакомство: кто со мной. Первый экран главной — имя, одна мысль, пара фактов. */
+export type IntroBlock = Base & {
+  type: 'intro';
+  /** Вордмарк огромным кеглем. */
   title: string;
-  eyebrow?: string;
-  lead?: string;
-  /** Текст на вращающемся кольце (emblem). */
-  ring?: string;
+  /** Подпись под вордмарком: настоящее имя и роль. */
+  name: string;
+  lead: string;
+  text?: string[];
+  facts?: { k: string; v: string }[];
   actions?: Link[];
 };
 
-/** Бегущая строка-разделитель. */
+/** Первый экран коммерческой страницы: крупная фраза на языке заказчика. */
+export type HeroBlock = Base & {
+  type: 'hero';
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  actions?: Link[];
+};
+
+/** Лента символов и слов — разделитель. */
 export type MarqueeBlock = Base & { type: 'marquee'; text: string };
 
-/** Манифест: во что я верю. Главный блок личности — крупные строки. */
+/** Манифест. statement — главная фраза огромным кеглем; lines — тезисы. */
 export type ManifestoBlock = Base & {
   type: 'manifesto';
   heading?: string;
-  lines: string[];
+  statement?: string;
+  lines: (string | { title: string; text: string })[];
   signature?: string;
 };
 
@@ -63,12 +73,15 @@ export type PersonaBlock = Base & {
   flip?: boolean;
 };
 
-/** Обмен для коллабы: что я приношу / кого ищу. */
-export type ExchangeBlock = Base & {
-  type: 'exchange';
+/** Коллаборации: зачем, что получает каждый и на каких условиях. */
+export type CollabBlock = Base & {
+  type: 'collab';
   heading: string;
-  give: { title: string; items: string[] };
-  seek: { title: string; items: string[] };
+  /** Зачем вообще делать вместе — 1–3 абзаца. */
+  why: string[];
+  /** Колонки «что получаешь ты / что получаю я». */
+  sides: { title: string; items: string[] }[];
+  terms?: { title: string; items: string[] };
 };
 
 /** Открытые идеи, под которые ищу соавторов. */
@@ -122,12 +135,13 @@ export type CtaBlock = Base & { type: 'cta'; heading: string; text?: string; act
 export type TextBlock = Base & { type: 'text'; heading?: string; paragraphs: string[] };
 
 export type Block =
+  | IntroBlock
+  | CollabBlock
   | HeroBlock
   | MarqueeBlock
   | ManifestoBlock
   | WorksBlock
   | PersonaBlock
-  | ExchangeBlock
   | IdeasBlock
   | PainBlock
   | ServicesBlock

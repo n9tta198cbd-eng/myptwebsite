@@ -1,69 +1,28 @@
-'use client';
-
-import { useEffect, useRef } from 'react';
-import { gsap, ScrollTrigger } from '@/lib/gsap';
-import { prefersReducedMotion } from '@/lib/motion';
 import type { MarqueeBlock } from '@/content/types';
+import { GLYPHS } from '../ui/glyphs';
 
-const REPEATS = 6;
+const REPEATS = 4;
 
-/* Бегущая строка-разделитель. Наклон -2deg, фон --ink.
-   Скорость и направление зависят от velocity скролла. */
+/* Лента: слова вперемешку с символами, чёрная полоса на всю ширину. */
 export default function Marquee({ block }: { block: MarqueeBlock }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track || prefersReducedMotion()) return;
-
-    const slide = gsap.to(track, {
-      xPercent: -50,
-      duration: 28,
-      ease: 'none',
-      repeat: -1,
-    });
-
-    let idle: ReturnType<typeof setTimeout>;
-
-    const trigger = ScrollTrigger.create({
-      onUpdate: (self) => {
-        const velocity = self.getVelocity();
-        const scale = gsap.utils.clamp(-10, 10, 1 + velocity / 180);
-        gsap.to(slide, { timeScale: scale, duration: 0.3, overwrite: true });
-
-        clearTimeout(idle);
-        idle = setTimeout(() => {
-          gsap.to(slide, { timeScale: 1, duration: 0.9, overwrite: true });
-        }, 140);
-      },
-    });
-
-    return () => {
-      clearTimeout(idle);
-      trigger.kill();
-      slide.kill();
-    };
-  }, []);
-
-  const line = `${block.text} ✦ `.repeat(REPEATS);
+  const words = block.text.split(/\s*✦\s*/).filter(Boolean);
+  const line = Array.from({ length: REPEATS }, (_, r) =>
+    words.map((w, i) => (
+      <span key={`${r}-${i}`} className="flex items-center gap-6 pr-6">
+        <span>{w}</span>
+        <span className="text-signal">{GLYPHS[(r * words.length + i) % GLYPHS.length]}</span>
+      </span>
+    )),
+  );
 
   return (
-    <div className="relative -my-2 w-screen overflow-hidden py-6 md:py-10">
-      <div className="-mx-[4vw] w-[108vw] -rotate-2 overflow-hidden border-y border-gold/40 bg-blood py-3 md:py-4">
-        <div ref={trackRef} className="flex w-max will-change-transform">
-          <span
-            className="shrink-0 font-blackletter text-3xl whitespace-nowrap text-bone md:text-5xl"
-            aria-hidden="true"
-          >
+    <div className="overflow-hidden border-t-2 border-ink bg-ink py-3 text-paper" aria-hidden="true">
+      <div className="ribbon-track flex w-max">
+        {[0, 1].map((k) => (
+          <div key={k} className="display flex shrink-0 text-2xl whitespace-nowrap md:text-4xl">
             {line}
-          </span>
-          <span
-            className="shrink-0 font-blackletter text-3xl whitespace-nowrap text-bone md:text-5xl"
-            aria-hidden="true"
-          >
-            {line}
-          </span>
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

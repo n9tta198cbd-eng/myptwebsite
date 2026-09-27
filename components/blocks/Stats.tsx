@@ -1,11 +1,12 @@
 import type { StatsBlock } from '@/content/types';
 import { StatsRow } from './Persona';
+import type { BlockProps } from './props';
 
-/* Отдельная строка цифр — без заголовка, как пауза между блоками. */
-export default function Stats({ block, id }: { block: StatsBlock; id: string }) {
+/* Строка цифр без заголовка — пауза между блоками. */
+export default function Stats({ block, id }: BlockProps<StatsBlock>) {
   return (
-    <section id={id} className="px-5 py-16 md:px-10">
-      <StatsRow items={block.items} className="mx-auto max-w-[1100px] text-center" />
+    <section id={id} className="border-t-2 border-ink px-4 py-12 md:px-8">
+      <StatsRow items={block.items} className="md:ml-[25%]" />
     </section>
   );
 }
