@@ -1,5 +1,13 @@
-/* Кейсы портфолио. Перенесено из content.json старого сайта.
-   Правится вручную — админ-панели больше нет. */
+import type { Lang } from './types';
+
+/* Кейсы портфолио — общий архив для всех страниц.
+   Блок works выбирает из него по id (cases) или по тегам (tags).
+   Перевод кейса — в поле i18n; чего нет в переводе, берётся из русского. */
+
+type CaseText = Pick<
+  Case,
+  'title' | 'subtitle' | 'category' | 'tag' | 'role' | 'services' | 'summary' | 'challenge' | 'approach' | 'outcome'
+>;
 
 export type Case = {
   id: string;
@@ -19,11 +27,15 @@ export type Case = {
   challenge: string;
   approach: string;
   outcome: string;
+  /** Теги для фильтра в блоке works: branding, music, ai, merch, community, systems… */
+  tags: string[];
+  i18n?: Partial<Record<Lang, Partial<CaseText>>>;
 };
 
 export const cases: Case[] = [
   {
     id: 'case-cyberclub',
+    tags: ['branding'],
     num: '01',
     slug: 'konsol-kiberklub',
     title: 'Консоль Киберклуб',
@@ -42,6 +54,7 @@ export const cases: Case[] = [
   },
   {
     id: 'case-gazgolder',
+    tags: ['music', 'ai', 'video'],
     num: '02',
     slug: 'gazgolder',
     title: 'BabyCute (Gazgolder)',
@@ -57,9 +70,23 @@ export const cases: Case[] = [
     challenge: 'Пересветить видео любой длительности в 4K без бюджета на коммерческие инструменты — и сделать это стабильно и масштабируемо.',
     approach: 'Вместо ручной обработки собрана собственная автоматизация на бесплатном API Google: пайплайн релайта, который выдерживает полную длительность клипа в 4K и работает как конвейер, а не как разовый трюк.',
     outcome: 'Больше 1000 сгенерированных кадров легли в два готовых клипа BabyCute.',
+    i18n: {
+      en: {
+        subtitle: 'Two music videos and a custom AI relight pipeline',
+        category: 'Art direction',
+        tag: 'Art direction',
+        role: 'AI video engineer, visual artist',
+        services: ['AI video pipeline', 'Relight automation', '4K generation', 'Music video visuals'],
+        summary: 'Two music videos for BabyCute. For production I built an automation that relights video of any length in 4K on a free Google API — over 1000 generated frames made it into the final cuts.',
+        challenge: 'Relight footage of any length in 4K with no budget for commercial tools, and make it stable and scalable.',
+        approach: 'Instead of manual grading I built a relight pipeline on a free Google API that handles a full-length clip in 4K and runs like a conveyor, not a one-off trick.',
+        outcome: 'Over 1000 generated frames in two finished BabyCute videos.',
+      },
+    },
   },
   {
     id: 'case-glebkostin',
+    tags: ['creators', 'ai', 'systems'],
     num: '03',
     slug: 'gleb-kostin',
     title: 'Глеб Костин',
@@ -75,9 +102,24 @@ export const cases: Case[] = [
     challenge: 'Четыре разных вселенные в одном проекте: иконки, маскот, сайт и AI-инструментарий. Каждая требовала полноценного ресерча, а не косметики.',
     approach: 'Каждый блок строился от исследования: полная история дизайна иконок с 1980 года, глубочайший разбор Уитли по архиву Valve, собственное приложение для установки иконок, обученные модели генерации. Ничего «на глаз».',
     outcome: '4 концепции, 4 цветовые темы и 50 визуальных стилистик на 9 иконок; полностью функциональная анимированная 3D-модель маскота с голосом и Telegram-ботом; сайт, превращающий обои айфона в недельный отсчёт времени.',
+    i18n: {
+      en: {
+        title: 'Gleb Kostin',
+        subtitle: 'Icons, a mascot, liveweeks and AI pipelines',
+        category: 'Socio-visual engineering',
+        tag: 'Socio-visual',
+        role: 'Art director, designer, AI pipeline',
+        services: ['macOS / iOS icon system', 'Mascot and 3D model', 'liveweeks website', 'AI image pipeline', 'Voiced Telegram bot'],
+        summary: 'Anti-dopamine icons for macOS/iOS, a branded mascot based on Wheatley from Portal 2, the liveweeks website and custom AI image pipelines.',
+        challenge: 'Four different universes in one project: icons, a mascot, a website and AI tooling. Each needed real research, not cosmetics.',
+        approach: 'Every part started with research: the full history of icon design since 1980, a deep dive into Wheatley through the Valve archive, a custom icon installer app, trained generation models.',
+        outcome: '4 concepts, 4 colour themes and 50 visual styles for 9 icons; a fully animated, voiced 3D mascot with a Telegram bot; a site that turns an iPhone wallpaper into a weekly countdown.',
+      },
+    },
   },
   {
     id: 'case-raindays',
+    tags: ['music', 'merch'],
     num: '04',
     slug: 'tri-dnya-dozhdya',
     title: 'Три дня дождя',
@@ -96,6 +138,7 @@ export const cases: Case[] = [
   },
   {
     id: 'case-32inches',
+    tags: ['branding', 'community', 'strategy'],
     num: '05',
     slug: '32inches',
     title: '32inches',
@@ -114,6 +157,7 @@ export const cases: Case[] = [
   },
   {
     id: 'case-elysium',
+    tags: ['systems', 'studio'],
     num: '06',
     slug: 'elysium-studio',
     title: 'Elysium Studio',
@@ -129,5 +173,29 @@ export const cases: Case[] = [
     challenge: 'Собрать работающую студию из людей и процессов — там, где обычно есть только чат и энтузиазм.',
     approach: 'Создана внутренняя система работы: распределение ролей и обязанностей, рабочая структура, пайплайн выполнения заказов и набор шаблонов для повседневной работы. Разработаны сайт студии и его структура, разобрана сопутствующая документация. Выстроена координация между отделами и система привлечения людей к развитию студии на проектной и добровольной основе.',
     outcome: 'Действующая студия с управляемой командой дизайнеров и воспроизводимыми процессами вместо хаоса.',
+    i18n: {
+      en: {
+        subtitle: 'An operating system for a studio',
+        category: 'Socio-visual engineering',
+        tag: 'Socio-visual',
+        role: 'Studio art director',
+        services: ['Internal workflow', 'Order pipeline', 'Studio website', 'Team structure', 'Engagement system'],
+        summary: 'Designing a studio as a system: roles, an order pipeline, templates, a website and a way to bring people in.',
+        challenge: 'Build a working studio out of people and processes where usually there is only a group chat and enthusiasm.',
+        approach: 'Roles and responsibilities, a working structure, an order pipeline and everyday templates. The studio website and its structure, the documentation around it, coordination between departments and a way to involve people on a project and volunteer basis.',
+        outcome: 'A functioning studio with a managed team of designers and repeatable processes instead of chaos.',
+      },
+    },
   },
 ];
+
+/** Кейсы для блока works на нужном языке. */
+export function pickCases(lang: Lang, ids?: string[], tags?: string[]): Case[] {
+  let list = cases;
+  if (ids?.length) {
+    list = ids.flatMap((id) => cases.filter((c) => c.id === id));
+  } else if (tags?.length) {
+    list = cases.filter((c) => c.tags.some((t) => tags.includes(t)));
+  }
+  return list.map((c) => ({ ...c, ...c.i18n?.[lang] }));
+}

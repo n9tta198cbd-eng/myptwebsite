@@ -3,13 +3,12 @@
 import { useEffect, useRef } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { prefersReducedMotion } from '@/lib/motion';
-import { SITE } from '@/lib/site';
 
 const PATH_ID = 'hero-ring-path';
 
 /* Кольцо текста вокруг эмблемы: базовое вращение 20s linear, скорость и
    направление дополнительно реагируют на velocity скролла. */
-export default function RotatingRing({ size = 340 }: { size?: number }) {
+export default function RotatingRing({ size = 340, text }: { size?: number; text: string }) {
   const ref = useRef<SVGGElement>(null);
 
   useEffect(() => {
@@ -66,7 +65,7 @@ export default function RotatingRing({ size = 340 }: { size?: number }) {
           style={{ fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}
         >
           <textPath href={`#${PATH_ID}`} startOffset="0">
-            {SITE.ringText.repeat(2)}
+            {text.repeat(2)}
           </textPath>
         </text>
       </g>

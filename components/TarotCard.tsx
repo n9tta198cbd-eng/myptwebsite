@@ -5,7 +5,8 @@ import { motion, useMotionValue, useSpring, type Variants } from 'framer-motion'
 import { useRef, useState } from 'react';
 import CardBack from './ornaments/CardBack';
 import Fleur from './ornaments/Fleur';
-import type { Case } from '@/lib/cases';
+import type { Case } from '@/content/cases';
+import { useUI } from './page/PageContext';
 import { useRichInteractions } from '@/lib/motion';
 
 const MAX_TILT = 8;
@@ -25,6 +26,7 @@ export const cardVariants: Variants = {
    повторный клик (или кнопка на обороте) открывает кейс. */
 export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => void }) {
   const rich = useRichInteractions();
+  const ui = useUI();
   const ref = useRef<HTMLDivElement>(null);
   const [flipped, setFlipped] = useState(false);
 
@@ -102,7 +104,7 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
               <div className="relative mx-5 mt-3 flex-1 overflow-hidden border border-gold/30">
                 <Image
                   src={item.cover}
-                  alt={`${item.title} — обложка кейса`}
+                  alt={`${item.title} — ${ui.cover}`}
                   fill
                   unoptimized={item.cover.endsWith('.svg')}
                   sizes="(max-width: 767px) 88vw, (max-width: 1279px) 44vw, 344px"
@@ -146,7 +148,7 @@ export default function TarotCard({ item, onOpen }: { item: Case; onOpen: () => 
                   }}
                   className="border border-gold/70 px-4 py-2 font-mono text-[10.5px] tracking-[0.16em] text-bone uppercase transition-colors duration-200 hover:border-blood hover:bg-blood"
                 >
-                  Открыть
+                  {ui.open}
                 </button>
               </div>
             </div>

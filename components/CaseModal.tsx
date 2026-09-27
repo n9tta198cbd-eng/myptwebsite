@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import Corner from './ornaments/Corner';
-import type { Case } from '@/lib/cases';
+import type { Case } from '@/content/cases';
+import { useUI } from './page/PageContext';
 
 /* Модалка кейса: полный текст, перенесённый со старого сайта.
    Esc и клик по фону закрывают, скролл страницы блокируется. */
@@ -16,6 +17,7 @@ export default function CaseModal({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const ui = useUI();
 
   useEffect(() => {
     if (!item) return;
@@ -41,9 +43,9 @@ export default function CaseModal({
 
   const blocks = item
     ? [
-        { title: 'Вызов', body: item.challenge },
-        { title: 'Подход', body: item.approach },
-        { title: 'Результат', body: item.outcome },
+        { title: ui.challenge, body: item.challenge },
+        { title: ui.approach, body: item.approach },
+        { title: ui.outcome, body: item.outcome },
       ].filter((b) => b.body)
     : [];
 
@@ -62,7 +64,7 @@ export default function CaseModal({
         >
           <button
             type="button"
-            aria-label="Закрыть"
+            aria-label={ui.close}
             onClick={onClose}
             className="fixed inset-0 -z-10 block size-full cursor-default bg-ink/85 backdrop-blur-[2px]"
           />
@@ -86,13 +88,13 @@ export default function CaseModal({
               onClick={onClose}
               className="label absolute top-4 right-5 z-20 text-bone/70 transition-colors duration-200 hover:text-blood"
             >
-              Закрыть ✕
+              {ui.close} ✕
             </button>
 
             <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-gold/40">
               <Image
                 src={item.cover}
-                alt={`${item.title} — обложка кейса`}
+                alt={`${item.title} — ${ui.cover}`}
                 fill
                 unoptimized={item.cover.endsWith('.svg')}
                 sizes="(max-width: 880px) 100vw, 880px"
@@ -109,10 +111,10 @@ export default function CaseModal({
 
               <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-gold/30 py-5 md:grid-cols-4">
                 {[
-                  ['Клиент', item.client],
-                  ['Год', item.year],
-                  ['Роль', item.role],
-                  ['Направление', item.category],
+                  [ui.client, item.client],
+                  [ui.year, item.year],
+                  [ui.role, item.role],
+                  [ui.category, item.category],
                 ].map(([k, v]) => (
                   <div key={k}>
                     <dt className="label text-bone/40">{k}</dt>
@@ -134,7 +136,7 @@ export default function CaseModal({
 
               {item.services.length > 0 && (
                 <div className="mt-10">
-                  <h3 className="label text-bone/40">Услуги</h3>
+                  <h3 className="label text-bone/40">{ui.services}</h3>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {item.services.map((s) => (
                       <li

@@ -3,13 +3,13 @@
 import { useEffect, useRef } from 'react';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { prefersReducedMotion } from '@/lib/motion';
-import { SITE } from '@/lib/site';
+import type { MarqueeBlock } from '@/content/types';
 
 const REPEATS = 6;
 
-/* Бегущая строка между hero и работами. Наклон -2deg, фон --ink.
+/* Бегущая строка-разделитель. Наклон -2deg, фон --ink.
    Скорость и направление зависят от velocity скролла. */
-export default function Marquee() {
+export default function Marquee({ block }: { block: MarqueeBlock }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Marquee() {
     };
   }, []);
 
-  const line = SITE.marquee.repeat(REPEATS);
+  const line = `${block.text} ✦ `.repeat(REPEATS);
 
   return (
     <div className="relative -my-2 w-screen overflow-hidden py-6 md:py-10">

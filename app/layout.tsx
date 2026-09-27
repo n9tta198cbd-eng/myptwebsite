@@ -3,14 +3,12 @@ import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans, Pirata_One } from 'ne
 import './globals.css';
 
 import CustomCursor from '@/components/ui/CustomCursor';
-import Footer from '@/components/Footer';
 import GrainOverlay from '@/components/ui/GrainOverlay';
-import Nav from '@/components/Nav';
 import FrameOverlay from '@/components/ui/FrameOverlay';
 import PageNoise from '@/components/ui/PageNoise';
 import Preloader from '@/components/Preloader';
 import SmoothScroll from '@/components/SmoothScroll';
-import { SITE } from '@/lib/site';
+import { PROFILE } from '@/content/profile';
 
 /* Pirata One — блэклеттер, только латиница (кириллицы в шрифте нет). */
 const pirata = Pirata_One({
@@ -43,23 +41,12 @@ const plexMono = IBM_Plex_Mono({
   display: 'swap',
 });
 
-const description =
-  'Портфолио арт-директора и дизайнера N9TTA: брендинг, арт-дирекшн и социовизуальная инженерия. Архив визуальных систем.';
-
+/* Общие метаданные. Заголовок и описание каждая страница задаёт сама в content/. */
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
-  title: `${SITE.name} — ${SITE.role} и дизайнер`,
-  description,
-  keywords: ['арт-директор', 'брендинг', 'дизайн', 'айдентика', 'арт-дирекшн', 'N9TTA'],
-  openGraph: {
-    type: 'website',
-    locale: 'ru_RU',
-    url: SITE.url,
-    siteName: SITE.name,
-    title: `${SITE.name} — ${SITE.role} и дизайнер`,
-    description,
-  },
-  twitter: { card: 'summary_large_image', title: SITE.name, description },
+  metadataBase: new URL(PROFILE.url),
+  keywords: ['арт-директор', 'брендинг', 'дизайн', 'айдентика', 'арт-дирекшн', 'N9TTA', 'Матвей Новик'],
+  openGraph: { type: 'website', locale: 'ru_RU', siteName: PROFILE.name },
+  twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true },
 };
 
@@ -75,13 +62,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <style dangerouslySetInnerHTML={{ __html: '#preloader{display:none !important}' }} />
         </noscript>
 
-        <a
-          href="#works"
-          className="label sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[110] focus:border focus:border-gold focus:bg-charcoal focus:px-4 focus:py-2"
-        >
-          К работам
-        </a>
-
         <PageNoise />
         <Preloader />
         <SmoothScroll />
@@ -89,9 +69,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GrainOverlay />
         <CustomCursor />
 
-        <Nav />
-        <main>{children}</main>
-        <Footer />
+        {/* меню, блоки и футер собирает PageRenderer из конфига страницы */}
+        {children}
       </body>
     </html>
   );

@@ -1,17 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import MagneticButton from './ui/MagneticButton';
-import SealButton from './ui/SealButton';
-import { CONTACTS } from '@/lib/site';
+import MagneticButton from '../ui/MagneticButton';
+import SealButton from '../ui/SealButton';
+import { PROFILE } from '@/content/profile';
+import type { Link } from '@/content/types';
 
-const LINKS = [
-  { href: '#works', label: 'Works' },
-  { href: '#about', label: 'About' },
-  { href: '#contact', label: 'Contact' },
-];
-
-export default function Nav() {
+/* Пункты меню собираются из блоков страницы с полем nav. */
+export default function Nav({ links, primary }: { links: Link[]; primary: Link }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -51,11 +47,11 @@ export default function Nav() {
           data-cursor="link"
           className="font-blackletter text-2xl leading-none tracking-wide md:text-3xl"
         >
-          N9TTA
+          {PROFILE.name}
         </a>
 
         <ul className="hidden items-center gap-9 md:flex">
-          {LINKS.map((l) => (
+          {links.map((l) => (
             <li key={l.href}>
               <MagneticButton>
                 <a
@@ -71,7 +67,7 @@ export default function Nav() {
           ))}
         </ul>
 
-        <SealButton href={`mailto:${CONTACTS.email}`} label="Написать" size={46} />
+        <SealButton href={primary.href} label={primary.label} size={46} />
       </nav>
 
       {/* линия-орнамент появляется вместе с фоном */}
